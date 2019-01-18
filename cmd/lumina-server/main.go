@@ -2,8 +2,8 @@ package main
 
 import (
     "context"
+    "crypto/tls"
     "log"
-    "net"
     "github.com/zhangyoufu/lumina"
 )
 
@@ -48,7 +48,14 @@ func (*Handler) ServeRequest(ctx context.Context, request lumina.Request) (respo
 }
 
 func main() {
-    ln, err := net.ListenTCP("tcp", &net.TCPAddr{Port: 65432})
+    cert, err := tls.LoadX509KeyPair("cert.pem", "key.pem")
+    if err != nil {
+        log.Fatal("unable to load X509 key pair: ", err)
+    }
+    config := &tls.Config{
+        Certificates: []tls.Certificate{ cert },
+    }
+    ln, err := tls.Listen("tcp", ":65432", config)
     if err != nil {
         log.Fatal("unable to listen: ", err)
     }
