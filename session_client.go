@@ -42,7 +42,7 @@ func (c *Client) Dial(ctx context.Context, logger *log.Logger, interpreter Inter
         return
     }
     if _, ok := rsp.(*RpcOkPacket); !ok {
-        err = stacktrace.Propagate(err, "hello response: %#v", rsp)
+        err = stacktrace.NewError("hello response: %#v", rsp)
         conn.Close()
         return
     }
