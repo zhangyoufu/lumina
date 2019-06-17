@@ -22,7 +22,7 @@ func (c *Client) getDialer() Dialer {
 }
 
 const (
-    hexRaysAddr = "lumina.hex-rays.com:65432"
+    hexRaysAddr = "lumina.hex-rays.com:443"
     hexRaysCert = `
 -----BEGIN CERTIFICATE-----
 MIIBtzCCAV2gAwIBAgIJAK3otIT/2KiZMAoGCCqGSM49BAMCMFMxCzAJBgNVBAYT

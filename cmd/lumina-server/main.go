@@ -55,7 +55,7 @@ func main() {
     config := &tls.Config{
         Certificates: []tls.Certificate{ cert },
     }
-    ln, err := tls.Listen("tcp", ":65432", config)
+    ln, err := tls.Listen("tcp", ":443", config)
     if err != nil {
         log.Fatal("unable to listen: ", err)
     }
