@@ -145,7 +145,7 @@ func (s *ServerSession) recvRequest() (req Request, err error) {
     var reqRaw RawPacket
     err = reqRaw.ReadFrom(s.conn)
     if err != nil {
-        s.logger.Print(stacktrace.Propagate(err, "unable to read raw packet from client"))
+        err = stacktrace.Propagate(err, "unable to read raw packet from client")
         return
     }
     // TODO: return a SERVFAIL instead of abort connection
