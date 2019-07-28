@@ -26,7 +26,7 @@ func (c *Client) Dial(ctx context.Context, logger *log.Logger, interpreter Inter
     }
 
     if logger == nil {
-        logger = newConnLogger(conn)
+        logger = newTaggedLogger()
     }
 
     _s := &ClientSession{

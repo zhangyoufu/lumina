@@ -56,7 +56,7 @@ func (srv *Server) Serve(ln net.Listener) error {
 func (srv *Server) serveConn(conn net.Conn) {
     defer conn.Close()
 
-    logger := newConnLogger(conn)
+    logger := newTaggedLogger()
     logger.Print("incoming connection from ", conn.RemoteAddr())
 
     ctx := context.TODO()
