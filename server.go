@@ -12,12 +12,14 @@ import (
 
 var _ = hex.EncodeToString
 
+type HeloCallback func(context.Context) (context.Context, error)
+
 type Server struct {
     Handler     Handler
 
-    // A callback for new connections. Protocol processing is deferred until the
-    // callback returns.
-    OnAccept    func(context.Context) (context.Context, error)
+    // Called once after PKT_HELO is received. Protocol processing is deferred
+    // until the callback returns.
+    OnHELO      HeloCallback
 }
 
 func (srv *Server) Serve(ln net.Listener) error {
@@ -60,21 +62,13 @@ func (srv *Server) serveConn(conn net.Conn) {
     ctx := context.TODO()
     ctx = setConn(ctx, conn)
     ctx = setLogger(ctx, logger)
-    if srv.OnAccept != nil {
-        var err error
-        ctx, err = srv.OnAccept(ctx)
-        if err != nil {
-            logger.Print(stacktrace.Propagate(err, "error in OnAccept callback"))
-            return
-        }
-    }
 
     s := ServerSession{
         conn: conn,
         logger: logger,
         ctx: ctx,
     }
-    s.serve(srv.Handler)
+    s.serve(srv.Handler, srv.OnHELO)
 }
 
 type ServerSession struct {
@@ -86,50 +80,65 @@ type ServerSession struct {
 
 var errInternalServerError = errors.New("internal server error")
 
-func (s *ServerSession) serve(handler Handler) {
-    s.handler = heloHandler
-    for {
-        var rsp Packet
-        req, err := s.recvRequest()
-        switch err {
-        case nil:
-            // TODO: further refine context
-            rsp, err = s.handler.ServeRequest(s.ctx, req)
-            if err != nil {
-                err = stacktrace.Propagate(err, "error while serving request")
-                s.logger.Print(err)
-                rsp = nil
-            } else {
-                reqType := req.getType()
-                rspType := rsp.getType()
-                if rspType != req.getResponseType() && rspType != PKT_RPC_FAIL {
-                    s.logger.Printf("%s response is not allowed for %s request", rspType, reqType)
-                    return
-                }
-            }
-        case errInternalServerError:
-            // break
-        default:
-            stacktrace.Propagate(err, "unrecoverable error while receiving request")
-            s.logger.Print(err)
-            return
-        }
-
-        if rsp == nil {
-            rsp = &RpcFailPacket{
-                Result: -1,
-                Error: "internal server error",
+func (s *ServerSession) serveOne(handler Handler) error {
+    var (
+        err error
+        req Request
+        rsp Packet
+    )
+    req, err = s.recvRequest()
+    switch err {
+    case nil:
+        // TODO: further refine context
+        rsp, err = s.handler.ServeRequest(s.ctx, req)
+        if err != nil {
+            err = stacktrace.Propagate(err, "error while serving request")
+        } else {
+            reqType := req.getType()
+            rspType := rsp.getType()
+            if rspType != req.getResponseType() && rspType != PKT_RPC_FAIL {
+                err = stacktrace.NewError("%s response is not allowed for %s request", rspType, reqType)
             }
         }
-
-        if err = s.sendResponse(rsp); err != nil {
-            err = stacktrace.Propagate(err, "unrecoverable error while sending request")
-            s.logger.Print(err)
-            return
-        }
-
-        s.handler = handler
+    case errInternalServerError: // non-critical
+        break
+    default: // critical
+        return stacktrace.Propagate(err, "unrecoverable error while receiving request")
     }
+
+    if err != nil {
+        s.logger.Print(err)
+        rsp = &RpcFailPacket{
+            Result: -1,
+            Error: "internal server error",
+        }
+    }
+
+    if err = s.sendResponse(rsp); err != nil {
+        return stacktrace.Propagate(err, "unrecoverable error while sending response")
+    }
+
+    return nil
+}
+
+func (s *ServerSession) serve(handler Handler, onHelo HeloCallback) {
+    var err error
+    var newCtx context.Context
+
+    if err = s.serveOne(heloHandler); err != nil { goto _ret }
+
+    if onHelo != nil {
+        if newCtx, err = onHelo(s.ctx); err != nil { goto _ret }
+        s.ctx = newCtx
+    }
+
+    for {
+        if err = s.serveOne(handler); err != nil { goto _ret }
+    }
+
+_ret:
+    s.logger.Print(err)
+    return
 }
 
 func (s *ServerSession) recvRequest() (req Request, err error) {

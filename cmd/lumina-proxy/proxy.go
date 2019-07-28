@@ -23,8 +23,7 @@ func NewProxy(licKey lumina.LicenseKey, licId lumina.LicenseId) (proxy *Proxy) {
     handler := &proxyHandler{}
     proxy = &Proxy{}
     proxy.Handler = handler
-    // TODO: callback after HELO is done
-    proxy.OnAccept = func(ctx context.Context) (newctx context.Context, err error) {
+    proxy.OnHELO = func(ctx context.Context) (newctx context.Context, err error) {
         session, err := client.Dial(ctx, lumina.GetLogger(ctx), handler)
         if err != nil {
             if err != context.Canceled {
