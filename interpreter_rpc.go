@@ -3,7 +3,7 @@ package lumina
 type rpcInterpreterType struct {}
 var rpcInterpreter = &rpcInterpreterType{}
 
-// Translate PKT_HELO only.
+// Interpret PKT_RPC_OK/PKT_RPC_FAIL/PKT_RPC_NOTIFY.
 func (*rpcInterpreterType) GetPacketOfType(t PacketType) Packet {
     switch t {
         case PKT_RPC_OK:
