@@ -86,11 +86,11 @@ func (s *ServerSession) serveOne(handler Handler) error {
         req Request
         rsp Packet
     )
-    req, err = s.recvRequest()
+    req, err = s.recvRequest(handler)
     switch err {
     case nil:
         // TODO: further refine context
-        rsp, err = s.handler.ServeRequest(s.ctx, req)
+        rsp, err = handler.ServeRequest(s.ctx, req)
         if err != nil {
             err = stacktrace.Propagate(err, "error while serving request")
         } else {
@@ -141,7 +141,7 @@ _ret:
     return
 }
 
-func (s *ServerSession) recvRequest() (req Request, err error) {
+func (s *ServerSession) recvRequest(h Handler) (req Request, err error) {
     var reqRaw RawPacket
     err = reqRaw.ReadFrom(s.conn)
     if err != nil {
@@ -152,12 +152,12 @@ func (s *ServerSession) recvRequest() (req Request, err error) {
     reqType := reqRaw.GetType()
     s.logger.Print("server recv request type: ", reqType)
     // logger.Print("server recv request rawdata: ", hex.EncodeToString(reqRaw.GetPayload()))
-    if !s.handler.AcceptRequest(reqType) {
+    if !h.AcceptRequest(reqType) {
         s.logger.Printf("request of type %v is not accepted by server", reqType)
         err = errInternalServerError
         return
     }
-    req, _ = s.handler.GetPacketOfType(reqType).(Request)
+    req, _ = h.GetPacketOfType(reqType).(Request)
     if req == nil {
         s.logger.Printf("request of type %v is not supported by server", reqType)
         err = errInternalServerError
