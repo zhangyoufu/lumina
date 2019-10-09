@@ -4,15 +4,16 @@ import (
     "bufio"
     "bytes"
     "go/ast"
-    "go/importer"
-    "go/parser"
     "go/token"
     "go/types"
     "io"
+    "io/ioutil"
     "log"
     "os"
     "strconv"
     "strings"
+
+    "golang.org/x/tools/go/packages"
 )
 
 type Metadata struct {
@@ -51,6 +52,7 @@ func extractAutoGenTask(filename string) Tasks {
 }
 
 type Context struct {
+    pkgTypePrefix   string
     depth       int
     counter     uint64
     r           bytes.Buffer
@@ -106,7 +108,7 @@ func (ctx *Context) writeCall(s string) {
     ctx.write("if err = "+s+".WriteTo(w); err != nil { return }")
 }
 
-func resolveType(t types.Type) (typeName string, realType types.Type) {
+func (ctx *Context) resolveType(t types.Type) (typeName string, realType types.Type) {
     typeName = ""
     realType = t
     for {
@@ -124,6 +126,13 @@ func resolveType(t types.Type) (typeName string, realType types.Type) {
         default:
             log.Fatalf("unable to resolve type %#v", t)
         }
+    } else {
+        if strings.HasPrefix(typeName, ctx.pkgTypePrefix) {
+            typeName = typeName[len(ctx.pkgTypePrefix):]
+        }
+        if !token.IsIdentifier(typeName) {
+            log.Fatal("unexpected typeName: ", typeName)
+        }
     }
     return
 }
@@ -131,7 +140,7 @@ func resolveType(t types.Type) (typeName string, realType types.Type) {
 func (ctx *Context) Process(varName string, varType types.Type) {
     ctx.depth += 1
     ctx.both("// Field "+varName)
-    varTypeName, varRealType := resolveType(varType)
+    varTypeName, varRealType := ctx.resolveType(varType)
     switch varRealType.(type) {
     case *types.Basic:
         basicType := varRealType.(*types.Basic)
@@ -201,7 +210,7 @@ func (ctx *Context) Process(varName string, varType types.Type) {
             log.Fatalf("array too long")
         }
         elemType := arrayType.Elem()
-        elemTypeName, _ := resolveType(elemType)
+        elemTypeName, _ := ctx.resolveType(elemType)
         if elemTypeName == "" {
             log.Fatalf("array of slice is not supported directly")
         }
@@ -218,7 +227,7 @@ func (ctx *Context) Process(varName string, varType types.Type) {
     case *types.Slice:
         sliceType := varRealType.(*types.Slice)
         elemType := sliceType.Elem()
-        elemTypeName, _ := resolveType(elemType)
+        elemTypeName, _ := ctx.resolveType(elemType)
         if elemTypeName == "" {
             log.Fatalf("slice of slice is not supported directly")
         }
@@ -258,62 +267,78 @@ func writeFile(f *os.File, s string) {
     }
 }
 
-func sourceFilter(fi os.FileInfo) bool {
-    name := fi.Name()
-    return !strings.HasSuffix(name, "_test.go") &&
-           !strings.HasSuffix(name, "_autogen.go")
+func clearAutogenFiles() {
+    files, err := ioutil.ReadDir(".")
+    if err != nil {
+        log.Fatal(err)
+    }
+    for _, fi := range files {
+        name := fi.Name()
+        if strings.HasSuffix(name, "_autogen.go") {
+            err := os.Remove(name)
+            if err != nil {
+                log.Fatal("unable to remove ", name)
+            }
+        }
+    }
 }
 
 func main() {
-    fset := token.NewFileSet()
-    pkgs, err := parser.ParseDir(fset, ".", sourceFilter, parser.AllErrors)
+    clearAutogenFiles()
+
+    pkgs, err := packages.Load(
+        &packages.Config{
+            Mode: packages.NeedName | packages.NeedFiles | packages.NeedTypes | packages.NeedSyntax | packages.NeedTypesInfo,
+        },
+        ".",
+    )
     if err != nil {
-        log.Fatal("parse error at ", err)
+        log.Fatal("packages.Load: ", err)
     }
+
     if len(pkgs) != 1 {
         log.Fatal("found multiple package")
     }
-    var pkg *ast.Package
-    for _, pkg = range pkgs {}
-    conf := types.Config{
-        IgnoreFuncBodies: true,
-        Importer: importer.Default(),
+
+    var pkg *packages.Package
+    for _, pkg = range pkgs {
+        log.Print("found package: ", pkg)
+        log.Print("package name: ", pkg.Name)
     }
-    files := []*ast.File{}
-    allTasks := map[*ast.File]Tasks{}
-    for filename, file := range pkg.Files {
-        files = append(files, file)
-        // TODO: type dependency inference, automatically add to autogen
+
+    // if len(pkg.Errors) > 0 {
+    //     for _, err := range pkg.Errors {
+    //         log.Print(err)
+    //     }
+    //     log.Print("package has unresolved error(s)")
+    // }
+
+    allTasks := map[int]Tasks{}
+
+    for idx, filename := range pkg.GoFiles {
+        // _test.go are excluded
+        if strings.HasSuffix(filename, "_autogen.go") {
+            continue
+        }
         tasks := extractAutoGenTask(filename)
         if len(tasks) > 0 {
-            allTasks[file] = tasks
+            allTasks[idx] = tasks
         }
     }
 
-    info := &types.Info{
-        Types: map[ast.Expr]types.TypeAndValue{},
-        // Defs:  map[*ast.Ident]types.Object{},
-        Uses:  map[*ast.Ident]types.Object{},
-    }
-    _, err = conf.Check("", fset, files, info)
-    if err != nil {
-        log.Fatal("type check failed, ", err)
-    }
-
-    for filename, file := range pkg.Files {
-        tasks, ok := allTasks[file]
+    for idx, filename := range pkg.GoFiles {
+        tasks, ok := allTasks[idx]
         if !ok { continue }
         outputFilename := filename[:len(filename)-3]+"_autogen.go"
         output, err := os.Create(outputFilename)
         if err != nil {
             log.Fatal("unable to create ", outputFilename)
         }
-        packageName := file.Name.Name
         writeFile(output, `// This file is automatically generated. DO NOT MODIFY!
 
-package ` + packageName + `
+package ` + pkg.Name + `
 `)
-        for _, decl := range file.Decls {
+        for _, decl := range pkg.Syntax[idx].Decls {
             genDecl, _ := decl.(*ast.GenDecl)
             if genDecl == nil { continue }
             if genDecl.Tok != token.TYPE { continue }
@@ -341,8 +366,8 @@ func (*` + structName + `) getResponseType() PacketType {
                 }
 
                 log.Print("struct ", structName)
-                ctx := Context{}
-                structType := info.TypeOf(astStructType).(*types.Struct)
+                ctx := Context{ pkgTypePrefix: pkg.PkgPath + "." }
+                structType := pkg.TypesInfo.TypeOf(astStructType).(*types.Struct)
                 for i := 0; i < structType.NumFields(); i++ {
                     field := structType.Field(i)
                     if !field.Exported() { continue }
