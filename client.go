@@ -1,3 +1,5 @@
+// +build go1.13
+
 package lumina
 
 import (
@@ -49,7 +51,7 @@ func init() {
     d := &TLSDialer{}
     d.Addr = hexRaysAddr
     d.RootCAs = roots
-    d.MinVersion = tls.VersionTLS12
+    d.MinVersion = tls.VersionTLS13
 
     defaultDialer = d
 }
