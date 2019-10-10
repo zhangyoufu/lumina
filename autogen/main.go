@@ -154,7 +154,7 @@ func (ctx *Context) resolveType(t types.Type) (typeName string, realType types.T
 }
 
 func (ctx *Context) Process(varName string, varType types.Type) {
-	ctx.depth += 1
+	ctx.depth++
 	ctx.both("// Field " + varName)
 	varTypeName, varRealType := ctx.resolveType(varType)
 	switch varRealType.(type) {
@@ -266,7 +266,7 @@ func (ctx *Context) Process(varName string, varType types.Type) {
 	default:
 		log.Fatalf("unknown type %#v", varRealType)
 	}
-	ctx.depth -= 1
+	ctx.depth--
 }
 
 func write(w io.Writer, s string) {
