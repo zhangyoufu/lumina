@@ -3,61 +3,77 @@
 package lumina
 
 func (*RpcOkPacket) getType() PacketType {
-    return PKT_RPC_OK
+	return PKT_RPC_OK
 }
 
 func (this *RpcOkPacket) ReadFrom(r Reader) (err error) {
-    return
+	return
 }
 
 func (this *RpcOkPacket) WriteTo(w Writer) (err error) {
-    return
+	return
 }
 
 func (*RpcFailPacket) getType() PacketType {
-    return PKT_RPC_FAIL
+	return PKT_RPC_FAIL
 }
 
 func (this *RpcFailPacket) ReadFrom(r Reader) (err error) {
-    // Field this.Result
-    // Basic int32
-    if this.Result, err = readInt32(r); err != nil { return }
-    // Field this.Error
-    // Basic string
-    if this.Error, err = readString(r); err != nil { return }
-    return
+	// Field this.Result
+	// Basic int32
+	if this.Result, err = readInt32(r); err != nil {
+		return
+	}
+	// Field this.Error
+	// Basic string
+	if this.Error, err = readString(r); err != nil {
+		return
+	}
+	return
 }
 
 func (this *RpcFailPacket) WriteTo(w Writer) (err error) {
-    // Field this.Result
-    // Basic int32
-    if err = writeInt32(w, this.Result); err != nil { return }
-    // Field this.Error
-    // Basic string
-    if err = writeString(w, this.Error); err != nil { return }
-    return
+	// Field this.Result
+	// Basic int32
+	if err = writeInt32(w, this.Result); err != nil {
+		return
+	}
+	// Field this.Error
+	// Basic string
+	if err = writeString(w, this.Error); err != nil {
+		return
+	}
+	return
 }
 
 func (*RpcNotifyPacket) getType() PacketType {
-    return PKT_RPC_NOTIFY
+	return PKT_RPC_NOTIFY
 }
 
 func (this *RpcNotifyPacket) ReadFrom(r Reader) (err error) {
-    // Field this.Code
-    // Basic int32
-    if this.Code, err = readInt32(r); err != nil { return }
-    // Field this.Message
-    // Basic string
-    if this.Message, err = readString(r); err != nil { return }
-    return
+	// Field this.Code
+	// Basic int32
+	if this.Code, err = readInt32(r); err != nil {
+		return
+	}
+	// Field this.Message
+	// Basic string
+	if this.Message, err = readString(r); err != nil {
+		return
+	}
+	return
 }
 
 func (this *RpcNotifyPacket) WriteTo(w Writer) (err error) {
-    // Field this.Code
-    // Basic int32
-    if err = writeInt32(w, this.Code); err != nil { return }
-    // Field this.Message
-    // Basic string
-    if err = writeString(w, this.Message); err != nil { return }
-    return
+	// Field this.Code
+	// Basic int32
+	if err = writeInt32(w, this.Code); err != nil {
+		return
+	}
+	// Field this.Message
+	// Basic string
+	if err = writeString(w, this.Message); err != nil {
+		return
+	}
+	return
 }

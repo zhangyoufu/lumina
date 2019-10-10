@@ -3,13 +3,13 @@
 package lumina
 
 type PullMdPacket struct {
-    packetCache
-    Flags           MdKeyFlag
-    Keys            []MdKey
-    PatternIds      []PatternId
+	packetCache
+	Flags      MdKeyFlag
+	Keys       []MdKey
+	PatternIds []PatternId
 }
 
 func (pkt *PullMdPacket) validateFields() error {
-    // TODO
-    return nil
+	// TODO
+	return nil
 }

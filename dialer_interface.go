@@ -4,5 +4,5 @@ import "net"
 
 // A Dialer dials like a lot.
 type Dialer interface {
-    Dial() (conn net.Conn, err error)
+	Dial() (conn net.Conn, err error)
 }

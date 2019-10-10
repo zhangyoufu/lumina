@@ -8,32 +8,32 @@ type RpcOkPacket struct {
 }
 
 func (pkt *RpcOkPacket) validateFields() error {
-    return nil
+	return nil
 }
 
 func (pkt *RpcOkPacket) getCache() []byte {
-    return []byte{
-        0x00, 0x00, 0x00, 0x00,
-        byte(PKT_RPC_OK),
-    }
+	return []byte{
+		0x00, 0x00, 0x00, 0x00,
+		byte(PKT_RPC_OK),
+	}
 }
 
 type RpcFailPacket struct {
-    packetCache
-    Result      int32
-    Error       string
+	packetCache
+	Result int32
+	Error  string
 }
 
 func (pkt *RpcFailPacket) validateFields() error {
-    return nil
+	return nil
 }
 
 type RpcNotifyPacket struct {
-    packetCache
-    Code        int32  // FIXME: or uint32?
-    Message     string
+	packetCache
+	Code    int32 // FIXME: or uint32?
+	Message string
 }
 
 func (pkt *RpcNotifyPacket) validateFields() error {
-    return nil
+	return nil
 }

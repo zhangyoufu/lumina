@@ -1,8 +1,8 @@
 package lumina
 
 import (
-    "context"
-    "net"
+	"context"
+	"net"
 )
 
 type connContextKeyType struct{}
@@ -12,9 +12,9 @@ type connContextKeyType struct{}
 var connContextKey = connContextKeyType{}
 
 func GetConn(ctx context.Context) net.Conn {
-    return ctx.Value(connContextKey).(net.Conn)
+	return ctx.Value(connContextKey).(net.Conn)
 }
 
 func setConn(ctx context.Context, conn net.Conn) context.Context {
-    return context.WithValue(ctx, connContextKey, conn)
+	return context.WithValue(ctx, connContextKey, conn)
 }

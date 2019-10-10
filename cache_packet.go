@@ -3,13 +3,13 @@ package lumina
 var _ cache = &packetCache{}
 
 type packetCache struct {
-    cache   RawPacket
+	cache RawPacket
 }
 
 func (pkt *packetCache) getCache() RawPacket {
-    return pkt.cache
+	return pkt.cache
 }
 
 func (pkt *packetCache) setCache(cache RawPacket) {
-    pkt.cache = cache
+	pkt.cache = cache
 }

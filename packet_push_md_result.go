@@ -3,10 +3,10 @@
 package lumina
 
 type PushMdResultPacket struct {
-    packetCache
-    Codes   []OpResult
+	packetCache
+	Codes []OpResult
 }
 
 func (*PushMdResultPacket) validateFields() error {
-    return nil
+	return nil
 }

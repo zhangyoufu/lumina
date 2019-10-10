@@ -3,73 +3,108 @@
 package lumina
 
 func (this *FuncInfo) ReadFrom(r Reader) (err error) {
-    // Field this.Name
-    // Basic string
-    if this.Name, err = readString(r); err != nil { return }
-    // Field this.Size
-    // Basic uint32
-    if this.Size, err = readUint32(r); err != nil { return }
-    // Field this.Metadata
-    // Slice []byte
-    var v1 uint32
-    if v1, err = readUint32(r); err != nil { return }
-    this.Metadata = make([]byte, v1)
-    if err = readBytes(r, this.Metadata); err != nil { return }
-    return
+	// Field this.Name
+	// Basic string
+	if this.Name, err = readString(r); err != nil {
+		return
+	}
+	// Field this.Size
+	// Basic uint32
+	if this.Size, err = readUint32(r); err != nil {
+		return
+	}
+	// Field this.Metadata
+	// Slice []byte
+	var v1 uint32
+	if v1, err = readUint32(r); err != nil {
+		return
+	}
+	this.Metadata = make([]byte, v1)
+	if err = readBytes(r, this.Metadata); err != nil {
+		return
+	}
+	return
 }
 
 func (this *FuncInfo) WriteTo(w Writer) (err error) {
-    // Field this.Name
-    // Basic string
-    if err = writeString(w, this.Name); err != nil { return }
-    // Field this.Size
-    // Basic uint32
-    if err = writeUint32(w, this.Size); err != nil { return }
-    // Field this.Metadata
-    // Slice []byte
-    if len(this.Metadata) > 0x7FFFFFFF { err = errTooLong; return }
-    var v1 = uint32(len(this.Metadata))
-    if err = writeUint32(w, v1); err != nil { return }
-    if err = writeBytes(w, this.Metadata); err != nil { return }
-    return
+	// Field this.Name
+	// Basic string
+	if err = writeString(w, this.Name); err != nil {
+		return
+	}
+	// Field this.Size
+	// Basic uint32
+	if err = writeUint32(w, this.Size); err != nil {
+		return
+	}
+	// Field this.Metadata
+	// Slice []byte
+	if len(this.Metadata) > 0x7FFFFFFF {
+		err = errTooLong
+		return
+	}
+	var v1 = uint32(len(this.Metadata))
+	if err = writeUint32(w, v1); err != nil {
+		return
+	}
+	if err = writeBytes(w, this.Metadata); err != nil {
+		return
+	}
+	return
 }
 
 func (this *FuncInfoAndFrequency) ReadFrom(r Reader) (err error) {
-    // Field this.FuncInfo
-    // Struct FuncInfo
-    if err = this.FuncInfo.ReadFrom(r); err != nil { return }
-    // Field this.Frequency
-    // Basic uint32
-    if this.Frequency, err = readUint32(r); err != nil { return }
-    return
+	// Field this.FuncInfo
+	// Struct FuncInfo
+	if err = this.FuncInfo.ReadFrom(r); err != nil {
+		return
+	}
+	// Field this.Frequency
+	// Basic uint32
+	if this.Frequency, err = readUint32(r); err != nil {
+		return
+	}
+	return
 }
 
 func (this *FuncInfoAndFrequency) WriteTo(w Writer) (err error) {
-    // Field this.FuncInfo
-    // Struct FuncInfo
-    if err = this.FuncInfo.WriteTo(w); err != nil { return }
-    // Field this.Frequency
-    // Basic uint32
-    if err = writeUint32(w, this.Frequency); err != nil { return }
-    return
+	// Field this.FuncInfo
+	// Struct FuncInfo
+	if err = this.FuncInfo.WriteTo(w); err != nil {
+		return
+	}
+	// Field this.Frequency
+	// Basic uint32
+	if err = writeUint32(w, this.Frequency); err != nil {
+		return
+	}
+	return
 }
 
 func (this *FuncInfoAndPattern) ReadFrom(r Reader) (err error) {
-    // Field this.FuncInfo
-    // Struct FuncInfo
-    if err = this.FuncInfo.ReadFrom(r); err != nil { return }
-    // Field this.PatternId
-    // Struct PatternId
-    if err = this.PatternId.ReadFrom(r); err != nil { return }
-    return
+	// Field this.FuncInfo
+	// Struct FuncInfo
+	if err = this.FuncInfo.ReadFrom(r); err != nil {
+		return
+	}
+	// Field this.PatternId
+	// Struct PatternId
+	if err = this.PatternId.ReadFrom(r); err != nil {
+		return
+	}
+	return
 }
 
 func (this *FuncInfoAndPattern) WriteTo(w Writer) (err error) {
-    // Field this.FuncInfo
-    // Struct FuncInfo
-    if err = this.FuncInfo.WriteTo(w); err != nil { return }
-    // Field this.PatternId
-    // Struct PatternId
-    if err = this.PatternId.WriteTo(w); err != nil { return }
-    return
+	// Field this.FuncInfo
+	// Struct FuncInfo
+	if err = this.FuncInfo.WriteTo(w); err != nil {
+		return
+	}
+	// Field this.PatternId
+	// Struct PatternId
+	if err = this.PatternId.WriteTo(w); err != nil {
+		return
+	}
+	return
 }

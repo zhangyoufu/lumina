@@ -3,11 +3,11 @@
 package lumina
 
 type PullMdResultPacket struct {
-    packetCache
-    Codes           []OpResult
-    Results         []FuncInfoAndFrequency
+	packetCache
+	Codes   []OpResult
+	Results []FuncInfoAndFrequency
 }
 
 func (pkt *PullMdResultPacket) validateFields() error {
-    return nil
+	return nil
 }

@@ -1,12 +1,12 @@
 package lumina
 
 type Packet interface {
-    Serializable
-    getType() PacketType
-    validateFields() error
+	Serializable
+	getType() PacketType
+	validateFields() error
 }
 
 type Request interface {
-    Packet
-    getResponseType() PacketType
+	Packet
+	getResponseType() PacketType
 }

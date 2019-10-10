@@ -3,29 +3,29 @@
 package lumina
 
 import (
-    "crypto/tls"
-    "crypto/x509"
+	"crypto/tls"
+	"crypto/x509"
 )
 
 // Clients can be reused instead of created as needed. Clients are safe for
 // concurrent use by multiple goroutines.
 type Client struct {
-    Dialer      Dialer
-    LicenseKey  LicenseKey
-    LicenseId   LicenseId
+	Dialer     Dialer
+	LicenseKey LicenseKey
+	LicenseId  LicenseId
 }
 
 func (c *Client) getDialer() Dialer {
-    if c.Dialer == nil {
-        return defaultDialer
-    } else {
-        return c.Dialer
-    }
+	if c.Dialer == nil {
+		return defaultDialer
+	} else {
+		return c.Dialer
+	}
 }
 
 const (
-    hexRaysAddr = "lumina.hex-rays.com:443"
-    hexRaysCert = `
+	hexRaysAddr = "lumina.hex-rays.com:443"
+	hexRaysCert = `
 -----BEGIN CERTIFICATE-----
 MIIBtzCCAV2gAwIBAgIJAK3otIT/2KiZMAoGCCqGSM49BAMCMFMxCzAJBgNVBAYT
 AkJFMQ8wDQYDVQQHDAZMacOoZ2UxFTATBgNVBAoMDEhleC1SYXlzIFNBLjEcMBoG
@@ -43,15 +43,15 @@ Tp4/G0S1wzuXibA=
 var defaultDialer Dialer
 
 func init() {
-    roots := x509.NewCertPool()
-    if ok := roots.AppendCertsFromPEM([]byte(hexRaysCert)); !ok {
-        panic("unable to parse Hex-Rays cert")
-    }
+	roots := x509.NewCertPool()
+	if ok := roots.AppendCertsFromPEM([]byte(hexRaysCert)); !ok {
+		panic("unable to parse Hex-Rays cert")
+	}
 
-    d := &TLSDialer{}
-    d.Addr = hexRaysAddr
-    d.RootCAs = roots
-    d.MinVersion = tls.VersionTLS13
+	d := &TLSDialer{}
+	d.Addr = hexRaysAddr
+	d.RootCAs = roots
+	d.MinVersion = tls.VersionTLS13
 
-    defaultDialer = d
+	defaultDialer = d
 }

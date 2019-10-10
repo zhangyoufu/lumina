@@ -1,8 +1,8 @@
 package lumina
 
 import (
-    "context"
-    "log"
+	"context"
+	"log"
 )
 
 type loggerContextKeyType struct{}
@@ -12,9 +12,9 @@ type loggerContextKeyType struct{}
 var loggerContextKey = loggerContextKeyType{}
 
 func GetLogger(ctx context.Context) *log.Logger {
-    return ctx.Value(loggerContextKey).(*log.Logger)
+	return ctx.Value(loggerContextKey).(*log.Logger)
 }
 
 func setLogger(ctx context.Context, logger *log.Logger) context.Context {
-    return context.WithValue(ctx, loggerContextKey, logger)
+	return context.WithValue(ctx, loggerContextKey, logger)
 }

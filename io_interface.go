@@ -3,11 +3,11 @@ package lumina
 import "io"
 
 type Reader interface {
-    io.Reader
-    io.ByteReader
+	io.Reader
+	io.ByteReader
 }
 
 type Writer interface {
-    io.Writer
-    io.ByteWriter
+	io.Writer
+	io.ByteWriter
 }

@@ -1,8 +1,8 @@
 package main
 
 import (
-    "context"
-    "github.com/zhangyoufu/lumina"
+	"context"
+	"github.com/zhangyoufu/lumina"
 )
 
 type upstreamContextKeyType struct{}
@@ -13,10 +13,10 @@ var upstreamContextKey = upstreamContextKeyType{}
 
 // Return *lumina.ClientSession extracted from a given context.Context.
 func getUpstream(ctx context.Context) *lumina.ClientSession {
-    return ctx.Value(upstreamContextKey).(*lumina.ClientSession)
+	return ctx.Value(upstreamContextKey).(*lumina.ClientSession)
 }
 
 // Create a lumina.ClientSession instance as upstream for each incoming connection.
 func setUpstream(ctx context.Context, session *lumina.ClientSession) context.Context {
-    return context.WithValue(ctx, upstreamContextKey, session)
+	return context.WithValue(ctx, upstreamContextKey, session)
 }
