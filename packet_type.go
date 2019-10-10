@@ -76,6 +76,6 @@ func (t PacketType) String() string {
 	case PKT_TELEMETRY_3:
 		return "PKT_TELEMETRY_3"
 	default:
-		return fmt.Sprintf("0x%02X", t)
+		return fmt.Sprintf("0x%02X", uint8(t))
 	}
 }
