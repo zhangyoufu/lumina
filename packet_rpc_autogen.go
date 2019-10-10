@@ -6,11 +6,11 @@ func (*RpcOkPacket) getType() PacketType {
 	return PKT_RPC_OK
 }
 
-func (this *RpcOkPacket) ReadFrom(r Reader) (err error) {
+func (this *RpcOkPacket) readFrom(r Reader) (err error) {
 	return
 }
 
-func (this *RpcOkPacket) WriteTo(w Writer) (err error) {
+func (this *RpcOkPacket) writeTo(w Writer) (err error) {
 	return
 }
 
@@ -18,7 +18,7 @@ func (*RpcFailPacket) getType() PacketType {
 	return PKT_RPC_FAIL
 }
 
-func (this *RpcFailPacket) ReadFrom(r Reader) (err error) {
+func (this *RpcFailPacket) readFrom(r Reader) (err error) {
 	// Field this.Result
 	// Basic int32
 	if this.Result, err = readInt32(r); err != nil {
@@ -32,7 +32,7 @@ func (this *RpcFailPacket) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *RpcFailPacket) WriteTo(w Writer) (err error) {
+func (this *RpcFailPacket) writeTo(w Writer) (err error) {
 	// Field this.Result
 	// Basic int32
 	if err = writeInt32(w, this.Result); err != nil {
@@ -50,7 +50,7 @@ func (*RpcNotifyPacket) getType() PacketType {
 	return PKT_RPC_NOTIFY
 }
 
-func (this *RpcNotifyPacket) ReadFrom(r Reader) (err error) {
+func (this *RpcNotifyPacket) readFrom(r Reader) (err error) {
 	// Field this.Code
 	// Basic int32
 	if this.Code, err = readInt32(r); err != nil {
@@ -64,7 +64,7 @@ func (this *RpcNotifyPacket) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *RpcNotifyPacket) WriteTo(w Writer) (err error) {
+func (this *RpcNotifyPacket) writeTo(w Writer) (err error) {
 	// Field this.Code
 	// Basic int32
 	if err = writeInt32(w, this.Code); err != nil {

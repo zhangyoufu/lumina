@@ -2,7 +2,7 @@
 
 package lumina
 
-func (this *PatternId) ReadFrom(r Reader) (err error) {
+func (this *PatternId) readFrom(r Reader) (err error) {
 	// Field this.Type
 	// Basic uint32
 	// Typed PatternType
@@ -24,7 +24,7 @@ func (this *PatternId) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *PatternId) WriteTo(w Writer) (err error) {
+func (this *PatternId) writeTo(w Writer) (err error) {
 	// Field this.Type
 	// Basic uint32
 	// Typed PatternType

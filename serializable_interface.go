@@ -1,6 +1,6 @@
 package lumina
 
 type Serializable interface {
-	ReadFrom(Reader) error
-	WriteTo(Writer) error
+	readFrom(Reader) error
+	writeTo(Writer) error
 }

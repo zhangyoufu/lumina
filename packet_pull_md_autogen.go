@@ -10,7 +10,7 @@ func (*PullMdPacket) getResponseType() PacketType {
 	return PKT_PULL_MD_RESULT
 }
 
-func (this *PullMdPacket) ReadFrom(r Reader) (err error) {
+func (this *PullMdPacket) readFrom(r Reader) (err error) {
 	// Field this.Flags
 	// Basic uint32
 	// Typed MdKeyFlag
@@ -46,14 +46,14 @@ func (this *PullMdPacket) ReadFrom(r Reader) (err error) {
 	for i := uint32(0); i < v4; i++ {
 		// Field this.PatternIds[i]
 		// Struct PatternId
-		if err = this.PatternIds[i].ReadFrom(r); err != nil {
+		if err = this.PatternIds[i].readFrom(r); err != nil {
 			return
 		}
 	}
 	return
 }
 
-func (this *PullMdPacket) WriteTo(w Writer) (err error) {
+func (this *PullMdPacket) writeTo(w Writer) (err error) {
 	// Field this.Flags
 	// Basic uint32
 	// Typed MdKeyFlag
@@ -91,7 +91,7 @@ func (this *PullMdPacket) WriteTo(w Writer) (err error) {
 	for i := uint32(0); i < v4; i++ {
 		// Field this.PatternIds[i]
 		// Struct PatternId
-		if err = this.PatternIds[i].WriteTo(w); err != nil {
+		if err = this.PatternIds[i].writeTo(w); err != nil {
 			return
 		}
 	}

@@ -2,7 +2,7 @@
 
 package lumina
 
-func (this *InputFile) ReadFrom(r Reader) (err error) {
+func (this *InputFile) readFrom(r Reader) (err error) {
 	// Field this.Path
 	// Basic string
 	if this.Path, err = readString(r); err != nil {
@@ -16,7 +16,7 @@ func (this *InputFile) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *InputFile) WriteTo(w Writer) (err error) {
+func (this *InputFile) writeTo(w Writer) (err error) {
 	// Field this.Path
 	// Basic string
 	if err = writeString(w, this.Path); err != nil {
@@ -38,7 +38,7 @@ func (*PushMdPacket) getResponseType() PacketType {
 	return PKT_PUSH_MD_RESULT
 }
 
-func (this *PushMdPacket) ReadFrom(r Reader) (err error) {
+func (this *PushMdPacket) readFrom(r Reader) (err error) {
 	// Field this.Flags
 	// Basic uint32
 	// Typed PushMdFlag
@@ -54,7 +54,7 @@ func (this *PushMdPacket) ReadFrom(r Reader) (err error) {
 	}
 	// Field this.Input
 	// Struct InputFile
-	if err = this.Input.ReadFrom(r); err != nil {
+	if err = this.Input.readFrom(r); err != nil {
 		return
 	}
 	// Field this.Hostname
@@ -72,7 +72,7 @@ func (this *PushMdPacket) ReadFrom(r Reader) (err error) {
 	for i := uint32(0); i < v2; i++ {
 		// Field this.Contents[i]
 		// Struct FuncInfoAndPattern
-		if err = this.Contents[i].ReadFrom(r); err != nil {
+		if err = this.Contents[i].readFrom(r); err != nil {
 			return
 		}
 	}
@@ -93,7 +93,7 @@ func (this *PushMdPacket) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *PushMdPacket) WriteTo(w Writer) (err error) {
+func (this *PushMdPacket) writeTo(w Writer) (err error) {
 	// Field this.Flags
 	// Basic uint32
 	// Typed PushMdFlag
@@ -107,7 +107,7 @@ func (this *PushMdPacket) WriteTo(w Writer) (err error) {
 	}
 	// Field this.Input
 	// Struct InputFile
-	if err = this.Input.WriteTo(w); err != nil {
+	if err = this.Input.writeTo(w); err != nil {
 		return
 	}
 	// Field this.Hostname
@@ -128,7 +128,7 @@ func (this *PushMdPacket) WriteTo(w Writer) (err error) {
 	for i := uint32(0); i < v2; i++ {
 		// Field this.Contents[i]
 		// Struct FuncInfoAndPattern
-		if err = this.Contents[i].WriteTo(w); err != nil {
+		if err = this.Contents[i].writeTo(w); err != nil {
 			return
 		}
 	}

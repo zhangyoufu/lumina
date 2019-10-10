@@ -6,7 +6,7 @@ func (*PushMdResultPacket) getType() PacketType {
 	return PKT_PUSH_MD_RESULT
 }
 
-func (this *PushMdResultPacket) ReadFrom(r Reader) (err error) {
+func (this *PushMdResultPacket) readFrom(r Reader) (err error) {
 	// Field this.Codes
 	// Slice []OpResult
 	var v1 uint32
@@ -27,7 +27,7 @@ func (this *PushMdResultPacket) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *PushMdResultPacket) WriteTo(w Writer) (err error) {
+func (this *PushMdResultPacket) writeTo(w Writer) (err error) {
 	// Field this.Codes
 	// Slice []OpResult
 	if len(this.Codes) > 0x7FFFFFFF {

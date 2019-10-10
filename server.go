@@ -149,7 +149,7 @@ _ret:
 
 func (s *ServerSession) recvRequest(h Handler) (req Request, err error) {
 	var reqRaw RawPacket
-	err = reqRaw.ReadFrom(s.conn)
+	err = reqRaw.readFrom(s.conn)
 	if err != nil {
 		err = stacktrace.Propagate(err, "unable to read raw packet from client")
 		return
@@ -170,7 +170,7 @@ func (s *ServerSession) recvRequest(h Handler) (req Request, err error) {
 		return
 	}
 	r := bytes.NewReader(reqRaw.GetPayload())
-	err = req.ReadFrom(r)
+	err = req.readFrom(r)
 	if err == nil && r.Len() > 0 {
 		err = errTrailingData
 	}
@@ -206,7 +206,7 @@ func (s *ServerSession) sendResponse(rsp Packet) (err error) {
 			return
 		}
 		rspPayload := &bytes.Buffer{}
-		if err = rsp.WriteTo(rspPayload); err != nil {
+		if err = rsp.writeTo(rspPayload); err != nil {
 			s.logger.Print(stacktrace.Propagate(err, "unable to marshal response of type %v", rspType))
 			return
 		}
@@ -217,7 +217,7 @@ func (s *ServerSession) sendResponse(rsp Packet) (err error) {
 		}
 	}
 	// logger.Print("server send response rawdata: ", hex.EncodeToString(rspRaw.GetPayload()))
-	if err = rspRaw.WriteTo(s.conn); err != nil {
+	if err = rspRaw.writeTo(s.conn); err != nil {
 		s.logger.Print(stacktrace.Propagate(err, "unable to write raw packet to client"))
 		return
 	}

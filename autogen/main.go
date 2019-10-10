@@ -113,11 +113,11 @@ func (ctx *Context) writeTypedVar(t, v string) {
 }
 
 func (ctx *Context) readCall(s string) {
-	ctx.read("if err = " + s + ".ReadFrom(r); err != nil {\n\treturn\n}")
+	ctx.read("if err = " + s + ".readFrom(r); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) writeCall(s string) {
-	ctx.write("if err = " + s + ".WriteTo(w); err != nil {\n\treturn\n}")
+	ctx.write("if err = " + s + ".writeTo(w); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) resolveType(t types.Type) (typeName string, realType types.Type) {
@@ -403,12 +403,12 @@ func (*`+structName+`) getResponseType() PacketType {
 				}
 
 				writeFile(output, `
-func (this *`+structName+`) ReadFrom(r Reader) (err error) {
+func (this *`+structName+`) readFrom(r Reader) (err error) {
 `+ctx.r.String()+`	return
 }
 `)
 				writeFile(output, `
-func (this *`+structName+`) WriteTo(w Writer) (err error) {
+func (this *`+structName+`) writeTo(w Writer) (err error) {
 `+ctx.w.String()+`	return
 }
 `)

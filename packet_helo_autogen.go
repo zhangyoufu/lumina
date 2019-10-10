@@ -10,7 +10,7 @@ func (*HeloPacket) getResponseType() PacketType {
 	return PKT_RPC_OK
 }
 
-func (this *HeloPacket) ReadFrom(r Reader) (err error) {
+func (this *HeloPacket) readFrom(r Reader) (err error) {
 	// Field this.ClientVersion
 	// Basic int32
 	if this.ClientVersion, err = readInt32(r); err != nil {
@@ -39,7 +39,7 @@ func (this *HeloPacket) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *HeloPacket) WriteTo(w Writer) (err error) {
+func (this *HeloPacket) writeTo(w Writer) (err error) {
 	// Field this.ClientVersion
 	// Basic int32
 	if err = writeInt32(w, this.ClientVersion); err != nil {

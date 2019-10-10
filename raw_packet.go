@@ -28,7 +28,7 @@ func NewRawPacket(t PacketType, payload []byte) (pkt RawPacket, err error) {
 }
 
 // Read one packet from the given io.Reader.
-func (pkt *RawPacket) ReadFrom(r io.Reader) (err error) {
+func (pkt *RawPacket) readFrom(r io.Reader) (err error) {
 	buf := &bytes.Buffer{}
 	if _, err = io.CopyN(buf, r, 5); err != nil {
 		return
@@ -49,7 +49,7 @@ func (pkt *RawPacket) ReadFrom(r io.Reader) (err error) {
 	return
 }
 
-func (pkt RawPacket) WriteTo(w io.Writer) (err error) {
+func (pkt RawPacket) writeTo(w io.Writer) (err error) {
 	_, err = io.Copy(w, bytes.NewReader([]byte(pkt)))
 	return
 }

@@ -6,7 +6,7 @@ func (*PullMdResultPacket) getType() PacketType {
 	return PKT_PULL_MD_RESULT
 }
 
-func (this *PullMdResultPacket) ReadFrom(r Reader) (err error) {
+func (this *PullMdResultPacket) readFrom(r Reader) (err error) {
 	// Field this.Codes
 	// Slice []OpResult
 	var v1 uint32
@@ -34,14 +34,14 @@ func (this *PullMdResultPacket) ReadFrom(r Reader) (err error) {
 	for i := uint32(0); i < v3; i++ {
 		// Field this.Results[i]
 		// Struct FuncInfoAndFrequency
-		if err = this.Results[i].ReadFrom(r); err != nil {
+		if err = this.Results[i].readFrom(r); err != nil {
 			return
 		}
 	}
 	return
 }
 
-func (this *PullMdResultPacket) WriteTo(w Writer) (err error) {
+func (this *PullMdResultPacket) writeTo(w Writer) (err error) {
 	// Field this.Codes
 	// Slice []OpResult
 	if len(this.Codes) > 0x7FFFFFFF {
@@ -73,7 +73,7 @@ func (this *PullMdResultPacket) WriteTo(w Writer) (err error) {
 	for i := uint32(0); i < v3; i++ {
 		// Field this.Results[i]
 		// Struct FuncInfoAndFrequency
-		if err = this.Results[i].WriteTo(w); err != nil {
+		if err = this.Results[i].writeTo(w); err != nil {
 			return
 		}
 	}

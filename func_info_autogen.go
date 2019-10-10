@@ -2,7 +2,7 @@
 
 package lumina
 
-func (this *FuncInfo) ReadFrom(r Reader) (err error) {
+func (this *FuncInfo) readFrom(r Reader) (err error) {
 	// Field this.Name
 	// Basic string
 	if this.Name, err = readString(r); err != nil {
@@ -26,7 +26,7 @@ func (this *FuncInfo) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *FuncInfo) WriteTo(w Writer) (err error) {
+func (this *FuncInfo) writeTo(w Writer) (err error) {
 	// Field this.Name
 	// Basic string
 	if err = writeString(w, this.Name); err != nil {
@@ -53,10 +53,10 @@ func (this *FuncInfo) WriteTo(w Writer) (err error) {
 	return
 }
 
-func (this *FuncInfoAndFrequency) ReadFrom(r Reader) (err error) {
+func (this *FuncInfoAndFrequency) readFrom(r Reader) (err error) {
 	// Field this.FuncInfo
 	// Struct FuncInfo
-	if err = this.FuncInfo.ReadFrom(r); err != nil {
+	if err = this.FuncInfo.readFrom(r); err != nil {
 		return
 	}
 	// Field this.Frequency
@@ -67,10 +67,10 @@ func (this *FuncInfoAndFrequency) ReadFrom(r Reader) (err error) {
 	return
 }
 
-func (this *FuncInfoAndFrequency) WriteTo(w Writer) (err error) {
+func (this *FuncInfoAndFrequency) writeTo(w Writer) (err error) {
 	// Field this.FuncInfo
 	// Struct FuncInfo
-	if err = this.FuncInfo.WriteTo(w); err != nil {
+	if err = this.FuncInfo.writeTo(w); err != nil {
 		return
 	}
 	// Field this.Frequency
@@ -81,29 +81,29 @@ func (this *FuncInfoAndFrequency) WriteTo(w Writer) (err error) {
 	return
 }
 
-func (this *FuncInfoAndPattern) ReadFrom(r Reader) (err error) {
+func (this *FuncInfoAndPattern) readFrom(r Reader) (err error) {
 	// Field this.FuncInfo
 	// Struct FuncInfo
-	if err = this.FuncInfo.ReadFrom(r); err != nil {
+	if err = this.FuncInfo.readFrom(r); err != nil {
 		return
 	}
 	// Field this.PatternId
 	// Struct PatternId
-	if err = this.PatternId.ReadFrom(r); err != nil {
+	if err = this.PatternId.readFrom(r); err != nil {
 		return
 	}
 	return
 }
 
-func (this *FuncInfoAndPattern) WriteTo(w Writer) (err error) {
+func (this *FuncInfoAndPattern) writeTo(w Writer) (err error) {
 	// Field this.FuncInfo
 	// Struct FuncInfo
-	if err = this.FuncInfo.WriteTo(w); err != nil {
+	if err = this.FuncInfo.writeTo(w); err != nil {
 		return
 	}
 	// Field this.PatternId
 	// Struct PatternId
-	if err = this.PatternId.WriteTo(w); err != nil {
+	if err = this.PatternId.writeTo(w); err != nil {
 		return
 	}
 	return
