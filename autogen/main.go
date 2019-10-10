@@ -69,7 +69,7 @@ func (ctx *Context) unique() string {
 }
 
 func (ctx *Context) pad(w *bytes.Buffer) {
-	write(w, strings.Repeat("    ", ctx.depth))
+	write(w, strings.Repeat("\t", ctx.depth))
 }
 
 func (ctx *Context) both(s string) {
@@ -78,42 +78,46 @@ func (ctx *Context) both(s string) {
 }
 
 func (ctx *Context) read(s string) {
-	ctx.pad(&ctx.r)
-	write(&ctx.r, s)
-	write(&ctx.r, "\n")
+	for _, line := range strings.Split(s, "\n") {
+		ctx.pad(&ctx.r)
+		write(&ctx.r, line)
+		write(&ctx.r, "\n")
+	}
 }
 
 func (ctx *Context) write(s string) {
-	ctx.pad(&ctx.w)
-	write(&ctx.w, s)
-	write(&ctx.w, "\n")
+	for _, line := range strings.Split(s, "\n") {
+		ctx.pad(&ctx.w)
+		write(&ctx.w, line)
+		write(&ctx.w, "\n")
+	}
 }
 
 func (ctx *Context) readVar(t, v string) {
-	ctx.read("if " + v + ", err = read" + t + "(r); err != nil { return }")
+	ctx.read("if " + v + ", err = read" + t + "(r); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) writeVar(t, v string) {
-	ctx.write("if err = write" + t + "(w, " + v + "); err != nil { return }")
+	ctx.write("if err = write" + t + "(w, " + v + "); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) readTypedVar(t, v, r string) {
 	tmp := ctx.unique()
 	ctx.read("var " + tmp + " " + strings.ToLower(t))
-	ctx.read("if " + tmp + ", err = read" + t + "(r); err != nil { return }")
+	ctx.read("if " + tmp + ", err = read" + t + "(r); err != nil {\n\treturn\n}")
 	ctx.read(v + " = " + r + "(" + tmp + ")")
 }
 
 func (ctx *Context) writeTypedVar(t, v string) {
-	ctx.write("if err = write" + t + "(w, " + strings.ToLower(t) + "(" + v + ")); err != nil { return }")
+	ctx.write("if err = write" + t + "(w, " + strings.ToLower(t) + "(" + v + ")); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) readCall(s string) {
-	ctx.read("if err = " + s + ".ReadFrom(r); err != nil { return }")
+	ctx.read("if err = " + s + ".ReadFrom(r); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) writeCall(s string) {
-	ctx.write("if err = " + s + ".WriteTo(w); err != nil { return }")
+	ctx.write("if err = " + s + ".WriteTo(w); err != nil {\n\treturn\n}")
 }
 
 func (ctx *Context) resolveType(t types.Type) (typeName string, realType types.Type) {
@@ -187,15 +191,15 @@ func (ctx *Context) Process(varName string, varType types.Type) {
 			}
 		case types.Uint8:
 			if varTypeName == "uint8" || varTypeName == "byte" {
-				ctx.read("if " + varName + ", err = r.ReadByte(); err != nil { return }")
-				ctx.write("if err = w.WriteByte(" + varName + "); err != nil { return }")
+				ctx.read("if " + varName + ", err = r.ReadByte(); err != nil {\n\treturn\n}")
+				ctx.write("if err = w.WriteByte(" + varName + "); err != nil {\n\treturn\n}")
 			} else {
 				ctx.both("// Typed " + varTypeName)
 				tmp := ctx.unique()
 				ctx.read("var " + tmp + " uint8")
-				ctx.read("if " + tmp + ", err = " + "r.ReadByte(); err != nil { return }")
+				ctx.read("if " + tmp + ", err = " + "r.ReadByte(); err != nil {\n\treturn\n}")
 				ctx.read(varName + " = " + varTypeName + "(" + tmp + ")")
-				ctx.write("if err = w.WriteByte(uint8(" + varName + ")); err != nil { return }")
+				ctx.write("if err = w.WriteByte(uint8(" + varName + ")); err != nil {\n\treturn\n}")
 			}
 		case types.Bool:
 			if varTypeName != "bool" {
@@ -229,8 +233,8 @@ func (ctx *Context) Process(varName string, varType types.Type) {
 		length := strconv.FormatInt(arrayType.Len(), 10)
 		ctx.both("// Array [" + length + "]" + elemTypeName)
 		if elemBasicType, ok := elemType.(*types.Basic); ok && elemBasicType.Kind() == types.Byte {
-			ctx.read("if err = readBytes(r, " + varName + "[:]); err != nil { return }")
-			ctx.write("if err = writeBytes(w, " + varName + "[:]); err != nil { return }")
+			ctx.read("if err = readBytes(r, " + varName + "[:]); err != nil {\n\treturn\n}")
+			ctx.write("if err = writeBytes(w, " + varName + "[:]); err != nil {\n\treturn\n}")
 		} else {
 			ctx.both("for i := uint32(0); i < " + length + "; i++ {")
 			ctx.Process(varName+"[i]", elemType)
@@ -248,12 +252,12 @@ func (ctx *Context) Process(varName string, varType types.Type) {
 		ctx.read("var " + tmp + " uint32")
 		ctx.readVar("Uint32", tmp)
 		ctx.read(varName + " = make([]" + elemTypeName + ", " + tmp + ")")
-		ctx.write("if len(" + varName + ") > 0x7FFFFFFF { err = errTooLong; return }")
+		ctx.write("if len(" + varName + ") > 0x7FFFFFFF {\n\terr = errTooLong\n\treturn\n}")
 		ctx.write("var " + tmp + " = uint32(len(" + varName + "))")
 		ctx.writeVar("Uint32", tmp)
 		if elemBasicType, ok := elemType.(*types.Basic); ok && elemBasicType.Kind() == types.Byte {
-			ctx.read("if err = readBytes(r, " + varName + "); err != nil { return }")
-			ctx.write("if err = writeBytes(w, " + varName + "); err != nil { return }")
+			ctx.read("if err = readBytes(r, " + varName + "); err != nil {\n\treturn\n}")
+			ctx.write("if err = writeBytes(w, " + varName + "); err != nil {\n\treturn\n}")
 		} else {
 			ctx.both("for i := uint32(0); i < " + tmp + "; i++ {")
 			ctx.Process(varName+"[i]", elemType)
@@ -375,14 +379,14 @@ package `+pkg.Name+`
 				if task.Type != "" {
 					writeFile(output, `
 func (*`+structName+`) getType() PacketType {
-    return `+task.Type+`
+	return `+task.Type+`
 }
 `)
 				}
 				if task.ResponseType != "" {
 					writeFile(output, `
 func (*`+structName+`) getResponseType() PacketType {
-    return `+task.ResponseType+`
+	return `+task.ResponseType+`
 }
 `)
 				}
@@ -400,12 +404,12 @@ func (*`+structName+`) getResponseType() PacketType {
 
 				writeFile(output, `
 func (this *`+structName+`) ReadFrom(r Reader) (err error) {
-`+ctx.r.String()+`    return
+`+ctx.r.String()+`	return
 }
 `)
 				writeFile(output, `
 func (this *`+structName+`) WriteTo(w Writer) (err error) {
-`+ctx.w.String()+`    return
+`+ctx.w.String()+`	return
 }
 `)
 			}
