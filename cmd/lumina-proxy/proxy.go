@@ -39,11 +39,12 @@ func NewProxy(licKey lumina.LicenseKey, licId lumina.LicenseId) (proxy *Proxy) {
 
 type proxyHandler struct{}
 
-// Currently, we only allow pulling metadata from upstream lumina server to
-// avoid abuse of our proxy.
+// Currently, we only allow pulling/pushing.
 func (*proxyHandler) AcceptRequest(t lumina.PacketType) bool {
 	switch t {
 	case lumina.PKT_PULL_MD:
+		return true
+	case lumina.PKT_PUSH_MD:
 		return true
 	default:
 		return false
@@ -56,6 +57,10 @@ func (*proxyHandler) GetPacketOfType(t lumina.PacketType) lumina.Packet {
 		return &lumina.PullMdPacket{}
 	case lumina.PKT_PULL_MD_RESULT:
 		return &lumina.PullMdResultPacket{}
+	case lumina.PKT_PUSH_MD:
+		return &lumina.PushMdPacket{}
+	case lumina.PKT_PUSH_MD_RESULT:
+		return &lumina.PushMdResultPacket{}
 	default:
 		return nil
 	}
@@ -63,6 +68,9 @@ func (*proxyHandler) GetPacketOfType(t lumina.PacketType) lumina.Packet {
 
 // Pump between client and upstream server. (half-duplex)
 func (*proxyHandler) ServeRequest(ctx context.Context, req lumina.Request) (rsp lumina.Packet, err error) {
+	if pkt, ok := req.(*lumina.PushMdPacket); ok {
+		pkt.AnonymizeFields(ctx)
+	}
 	rsp, err = getUpstream(ctx).Request(ctx, req)
 	// if err != nil {
 	//     lumina.GetConn(ctx).Close()

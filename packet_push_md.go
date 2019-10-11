@@ -3,6 +3,8 @@
 
 package lumina
 
+import "context"
+
 type PushMdFlag uint32
 
 const (
@@ -34,4 +36,18 @@ type PushMdPacket struct {
 
 func (*PushMdPacket) validateFields() error {
 	return nil
+}
+
+func (pkt *PushMdPacket) AnonymizeFields(ctx context.Context) {
+	logger := GetLogger(ctx)
+
+	logger.Print("hostname: ", pkt.Hostname)
+	logger.Print("input: ", pkt.Input.Path)
+	logger.Print("idb: ", pkt.Idb)
+
+	pkt.Hostname = "localhost"
+	pkt.Input.Path = "C:\\fakepath\\input"
+	pkt.Idb = "C:\\fakepath\\input.idb"
+
+	pkt.setCache(nil)
 }
