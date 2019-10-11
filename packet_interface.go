@@ -5,8 +5,3 @@ type Packet interface {
 	getType() PacketType
 	validateFields() error
 }
-
-type Request interface {
-	Packet
-	getResponseType() PacketType
-}
