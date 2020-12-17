@@ -1,4 +1,4 @@
 FROM scratch
 COPY lumina-proxy /
 ENTRYPOINT ["/lumina-proxy"]
-CMD ["-h"]
+ENV GODEBUG x509ignoreCN=0
