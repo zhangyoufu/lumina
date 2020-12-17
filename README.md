@@ -35,6 +35,11 @@ By using a proxy server that understands lumina protocol, you can benefit from a
 * https://abda.nl/posts/introducing-lumen/
 * https://lumen.abda.nl/
 
+# Other Implementations
+
+* https://github.com/synacktiv/lumina_server
+* https://github.com/naim94a/lumen
+
 # Warning
 
 It's not wise to use any untrusted 3rd-party lumina server.
