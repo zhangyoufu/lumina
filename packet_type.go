@@ -4,31 +4,34 @@ import "fmt"
 
 type PacketType uint8
 
-// Most values are documented at https://www.hex-rays.com/products/ida/support/idapython_docs/ida_lumina-module.html.
-// PKT_TELEMETRY_[123] are undocumented logging facility, for debugging or
-// telemetry purpose.
 const (
-	PKT_RPC_OK               PacketType = 0x0A
-	PKT_RPC_FAIL             PacketType = 0x0B
-	PKT_RPC_NOTIFY           PacketType = 0x0C // unused
-	PKT_HELO                 PacketType = 0x0D
-	PKT_PULL_MD              PacketType = 0x0E
-	PKT_PULL_MD_RESULT       PacketType = 0x0F
-	PKT_PUSH_MD              PacketType = 0x10
-	PKT_PUSH_MD_RESULT       PacketType = 0x11
-	PKT_GET_POP              PacketType = 0x12 // unused
-	PKT_GET_POP_RESULT       PacketType = 0x13 // unused
-	PKT_LIST_PEERS           PacketType = 0x14 // unused
-	PKT_LIST_PEERS_RESULT    PacketType = 0x15 // unused
-	PKT_KILL_SESSIONS        PacketType = 0x16 // unused
-	PKT_KILL_SESSIONS_RESULT PacketType = 0x17 // unused
-	PKT_DUMP_MD              PacketType = 0x18 // unused
-	PKT_DUMP_MD_RESULT       PacketType = 0x19 // unused
-	PKT_CLEAN_DB             PacketType = 0x1A // unused
-	PKT_DEBUG_SLEEP          PacketType = 0x1B
-	PKT_TELEMETRY_1          PacketType = 0x34 // level < 0, exit(1)
-	PKT_TELEMETRY_2          PacketType = 0x35 // level = 0
-	PKT_TELEMETRY_3          PacketType = 0x36 // level > 0
+	PKT_RPC_OK                   PacketType = 0x0A
+	PKT_RPC_FAIL                 PacketType = 0x0B
+	PKT_RPC_NOTIFY               PacketType = 0x0C
+	PKT_HELO                     PacketType = 0x0D
+	PKT_PULL_MD                  PacketType = 0x0E
+	PKT_PULL_MD_RESULT           PacketType = 0x0F
+	PKT_PUSH_MD                  PacketType = 0x10
+	PKT_PUSH_MD_RESULT           PacketType = 0x11
+	PKT_GET_POP                  PacketType = 0x12
+	PKT_GET_POP_RESULT           PacketType = 0x13
+	PKT_LIST_PEERS               PacketType = 0x14
+	PKT_LIST_PEERS_RESULT        PacketType = 0x15
+	PKT_KILL_SESSIONS            PacketType = 0x16
+	PKT_KILL_SESSIONS_RESULT     PacketType = 0x17
+	PKT_DEL_HISTORY              PacketType = 0x18
+	PKT_DEL_HISTORY_RESULT       PacketType = 0x19
+	PKT_SHOW_HISTORY             PacketType = 0x1A
+	PKT_SHOW_HISTORY_RESULT      PacketType = 0x1B
+	PKT_DUMP_MD                  PacketType = 0x1C
+	PKT_DUMP_MD_RESULT           PacketType = 0x1D
+	PKT_CLEAN_DB                 PacketType = 0x1E
+	PKT_DEBUGCTL                 PacketType = 0x1F
+	PKT_DECOMPILE                PacketType = 0x20
+	PKT_DECOMPILE_RESULT         PacketType = 0x21
+	PKT_PUSH_TLM                 PacketType = 0x22
+	PKT_SHOW_TLM_SESSIONS        PacketType = 0x23
+	PKT_SHOW_TLM_SESSIONS_RESULT PacketType = 0x24
 )
 
 func (t PacketType) String() string {
@@ -61,20 +64,32 @@ func (t PacketType) String() string {
 		return "PKT_KILL_SESSIONS"
 	case PKT_KILL_SESSIONS_RESULT:
 		return "PKT_KILL_SESSIONS_RESULT"
+	case PKT_DEL_HISTORY:
+		return "PKT_DEL_HISTORY"
+	case PKT_DEL_HISTORY_RESULT:
+		return "PKT_DEL_HISTORY_RESULT"
+	case PKT_SHOW_HISTORY:
+		return "PKT_SHOW_HISTORY"
+	case PKT_SHOW_HISTORY_RESULT:
+		return "PKT_SHOW_HISTORY_RESULT"
 	case PKT_DUMP_MD:
 		return "PKT_DUMP_MD"
 	case PKT_DUMP_MD_RESULT:
 		return "PKT_DUMP_MD_RESULT"
 	case PKT_CLEAN_DB:
 		return "PKT_CLEAN_DB"
-	case PKT_DEBUG_SLEEP:
-		return "PKT_DEBUG_SLEEP"
-	case PKT_TELEMETRY_1:
-		return "PKT_TELEMETRY_1"
-	case PKT_TELEMETRY_2:
-		return "PKT_TELEMETRY_2"
-	case PKT_TELEMETRY_3:
-		return "PKT_TELEMETRY_3"
+	case PKT_DEBUGCTL:
+		return "PKT_DEBUGCTL"
+	case PKT_DECOMPILE:
+		return "PKT_DECOMPILE"
+	case PKT_DECOMPILE_RESULT:
+		return "PKT_DECOMPILE_RESULT"
+	case PKT_PUSH_TLM:
+		return "PKT_PUSH_TLM"
+	case PKT_SHOW_TLM_SESSIONS:
+		return "PKT_SHOW_TLM_SESSIONS"
+	case PKT_SHOW_TLM_SESSIONS_RESULT:
+		return "PKT_SHOW_TLM_SESSIONS_RESULT"
 	default:
 		return fmt.Sprintf("0x%02X", uint8(t))
 	}
