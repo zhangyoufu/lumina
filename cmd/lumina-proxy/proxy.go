@@ -46,6 +46,8 @@ func (*proxyHandler) AcceptRequest(t lumina.PacketType) bool {
 		return true
 	case lumina.PKT_PUSH_MD:
 		return true
+	case lumina.PKT_DECOMPILE:
+		return true
 	default:
 		return false
 	}
@@ -61,6 +63,10 @@ func (*proxyHandler) GetPacketOfType(t lumina.PacketType) lumina.Packet {
 		return &lumina.PushMdPacket{}
 	case lumina.PKT_PUSH_MD_RESULT:
 		return &lumina.PushMdResultPacket{}
+	case lumina.PKT_DECOMPILE:
+		return &lumina.DecompilePacket{}
+	case lumina.PKT_DECOMPILE_RESULT:
+		return &lumina.DecompileResultPacket{}
 	default:
 		return nil
 	}
