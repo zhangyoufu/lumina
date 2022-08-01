@@ -1,0 +1,16 @@
+--- a/src/crypto/x509/verify.go
++++ b/src/crypto/x509/verify.go
+@@ -1039,7 +1039,12 @@ func (c *Certificate) VerifyHostname(h string) error {
+ 	candidateName := toLowerCaseASCII(h) // Save allocations inside the loop.
+ 	validCandidateName := validHostnameInput(candidateName)
+ 
+-	for _, match := range c.DNSNames {
++	names := c.DNSNames
++	if !c.hasSANExtension() && validHostnamePattern(c.Subject.CommonName) {
++		names = []string{c.Subject.CommonName}
++	}
++
++	for _, match := range names {
+ 		// Ideally, we'd only match valid hostnames according to RFC 6125 like
+ 		// browsers (more or less) do, but in practice Go is used in a wider
+ 		// array of contexts and can't even assume DNS resolution. Instead,
