@@ -32,6 +32,16 @@ const (
 	PKT_PUSH_TLM                 PacketType = 0x22
 	PKT_SHOW_TLM_SESSIONS        PacketType = 0x23
 	PKT_SHOW_TLM_SESSIONS_RESULT PacketType = 0x24
+	PKT_SHOW_PUSHES              PacketType = 0x25
+	PKT_SHOW_PUSHES_RESULT       PacketType = 0x26
+	PKT_USER_OPERATION           PacketType = 0x27
+	PKT_SHOW_USERS               PacketType = 0x28
+	PKT_SHOW_USERS_RESULT        PacketType = 0x29
+	PKT_SET_PASSWORD             PacketType = 0x2A
+	PKT_GET_LUMINA_INFO          PacketType = 0x2B
+	PKT_GET_LUMINA_INFO_RESULT   PacketType = 0x2C
+	PKT_GET_LUMINA_STATS         PacketType = 0x2D
+	PKT_GET_LUMINA_STATS_RESULT  PacketType = 0x2E
 )
 
 func (t PacketType) String() string {
@@ -90,6 +100,26 @@ func (t PacketType) String() string {
 		return "PKT_SHOW_TLM_SESSIONS"
 	case PKT_SHOW_TLM_SESSIONS_RESULT:
 		return "PKT_SHOW_TLM_SESSIONS_RESULT"
+	case PKT_SHOW_PUSHES:
+		return "PKT_SHOW_PUSHES"
+	case PKT_SHOW_PUSHES_RESULT:
+		return "PKT_SHOW_PUSHES_RESULT"
+	case PKT_USER_OPERATION:
+		return "PKT_USER_OPERATION"
+	case PKT_SHOW_USERS:
+		return "PKT_SHOW_USERS"
+	case PKT_SHOW_USERS_RESULT:
+		return "PKT_SHOW_USERS_RESULT"
+	case PKT_SET_PASSWORD:
+		return "PKT_SET_PASSWORD"
+	case PKT_GET_LUMINA_INFO:
+		return "PKT_GET_LUMINA_INFO"
+	case PKT_GET_LUMINA_INFO_RESULT:
+		return "PKT_GET_LUMINA_INFO_RESULT"
+	case PKT_GET_LUMINA_STATS:
+		return "PKT_GET_LUMINA_STATS"
+	case PKT_GET_LUMINA_STATS_RESULT:
+		return "PKT_GET_LUMINA_STATS_RESULT"
 	default:
 		return fmt.Sprintf("0x%02X", uint8(t))
 	}
