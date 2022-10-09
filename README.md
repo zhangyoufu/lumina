@@ -2,7 +2,7 @@
 
 * `github.com/zhangyoufu/lumina`
 
-  A Go library speaking (IDA Pro) lumina protocol.
+  A Go library speaking Hex-Rays IDA lumina protocol.
 
 * `github.com/zhangyoufu/lumina/cmd/lumina-proxy`
 
@@ -24,7 +24,7 @@ By using a proxy server that understands lumina protocol, you can benefit from a
 1. get a copy of `ida.key` (a legitimate license is required)
 2. generate TLS private key and certificate (or PKI)
 3. `docker run -p 443:443 -v $(pwd)/ida.key:/ida.key:ro -v $(pwd)/cert.pem:/cert.pem:ro -v $(pwd)/key.pem:/key.pem:ro youfu/lumina-proxy -listen :443 -tls`
-4. configure your clients to use and trust this proxy server
+4. configure your clients to use and trust this proxy server (the following instruction is only applicable to IDA < 8.0)
    * modify `LUMINA_HOST` and `LUMINA_PORT` in `cfg/ida.cfg`
    * copy your TLS certificate into IDA installation directory and rename it to `hexrays.crt`
    * restart IDA
@@ -37,6 +37,7 @@ By using a proxy server that understands lumina protocol, you can benefit from a
 
 # Other Implementations
 
+* https://hex-rays.com/products/ida/lumina/ (official)
 * https://github.com/synacktiv/lumina_server
 * https://github.com/naim94a/lumen
 
