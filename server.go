@@ -81,43 +81,47 @@ var errInternalServerError = errors.New("internal server error")
 
 func (s *ServerSession) serveOne(handler Handler) error {
 	var (
-		err error
-		req Request
-		rsp Packet
+		req    Request
+		reqErr error // error when recv and serve request
+		rsp    Packet
+		rspErr error // error when send response
 	)
-	req, err = s.recvRequest(handler)
-	switch err {
+	req, reqErr = s.recvRequest(handler)
+	switch reqErr {
 	case nil:
 		// TODO: further refine context
-		rsp, err = handler.ServeRequest(s.ctx, req)
-		if err != nil {
-			err = stacktrace.Propagate(err, "error while serving request")
+		rsp, reqErr = handler.ServeRequest(s.ctx, req)
+		if reqErr != nil {
+			reqErr = stacktrace.Propagate(reqErr, "error while serving request")
 		} else {
 			reqType := req.getType()
 			rspType := rsp.getType()
 			if rspType != req.getResponseType() && rspType != PKT_RPC_FAIL {
-				err = stacktrace.NewError("%s response is not allowed for %s request", rspType, reqType)
+				reqErr = stacktrace.NewError("%s response is not allowed for %s request", rspType, reqType)
 			}
 		}
 	case errInternalServerError: // non-critical
 		break
 	default: // critical
-		return stacktrace.Propagate(err, "unrecoverable error while receiving request")
+		return stacktrace.Propagate(reqErr, "unrecoverable error while receiving request")
 	}
 
-	if err != nil {
-		s.logger.Print(err)
+	if reqErr != nil {
+		s.logger.Print(reqErr)
 		rsp = &RpcFailPacket{
 			Result: -1,
 			Error:  "internal server error",
 		}
 	}
 
-	if err = s.sendResponse(rsp); err != nil {
-		return stacktrace.Propagate(err, "unrecoverable error while sending response")
+	if rspErr = s.sendResponse(rsp); rspErr != nil {
+		rspErr = stacktrace.Propagate(rspErr, "unrecoverable error while sending response")
 	}
 
-	return nil
+	if reqErr != nil {
+		return reqErr
+	}
+	return rspErr
 }
 
 func (s *ServerSession) serve(handler Handler, onHelo HeloCallback) {
