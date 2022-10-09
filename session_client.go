@@ -17,7 +17,7 @@ type ClientSession struct {
 	interpreter Interpreter
 }
 
-func (c *Client) Dial(ctx context.Context, logger *log.Logger, interpreter Interpreter) (s *ClientSession, err error) {
+func (c *Client) Dial(ctx context.Context, logger *log.Logger, version int32, interpreter Interpreter) (s *ClientSession, err error) {
 	// FIXME: Dialer does not support context.Context
 	conn, err := c.getDialer().Dial()
 	if err != nil {
@@ -35,7 +35,7 @@ func (c *Client) Dial(ctx context.Context, logger *log.Logger, interpreter Inter
 		interpreter: interpreter,
 	}
 
-	rsp, err := _s.Request(ctx, newHeloPacket(c.LicenseKey, c.LicenseId))
+	rsp, err := _s.Request(ctx, newHeloPacket(version, c.LicenseKey, c.LicenseId))
 	if err != nil {
 		err = stacktrace.Propagate(err, "hello request failed")
 		conn.Close()

@@ -75,7 +75,6 @@ type ServerSession struct {
 	conn    net.Conn
 	logger  *log.Logger
 	ctx     context.Context
-	handler Handler
 }
 
 var errInternalServerError = errors.New("internal server error")
@@ -125,7 +124,7 @@ func (s *ServerSession) serve(handler Handler, onHelo HeloCallback) {
 	var err error
 	var newCtx context.Context
 
-	if err = s.serveOne(heloHandler); err != nil {
+	if err = s.serveOne(&heloHandler{s}); err != nil {
 		goto _ret
 	}
 

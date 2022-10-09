@@ -24,7 +24,7 @@ func NewProxy(licKey lumina.LicenseKey, licId lumina.LicenseId) (proxy *Proxy) {
 	proxy = &Proxy{}
 	proxy.Handler = handler
 	proxy.OnHELO = func(ctx context.Context) (newctx context.Context, err error) {
-		session, err := client.Dial(ctx, lumina.GetLogger(ctx), handler)
+		session, err := client.Dial(ctx, lumina.GetLogger(ctx), lumina.GetProtocolVersion(ctx), handler)
 		if err != nil {
 			if err != context.Canceled {
 				err = stacktrace.Propagate(err, "unable to create upstream session")

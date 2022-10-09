@@ -4,17 +4,17 @@ import (
 	"context"
 )
 
-type heloHandlerType struct{}
-
-var heloHandler = &heloHandlerType{}
+type heloHandler struct{
+	serverSession *ServerSession
+}
 
 // Accept PKT_HELO only.
-func (*heloHandlerType) AcceptRequest(t PacketType) bool {
+func (*heloHandler) AcceptRequest(t PacketType) bool {
 	return t == PKT_HELO
 }
 
 // Translate PKT_HELO only.
-func (*heloHandlerType) GetPacketOfType(t PacketType) Packet {
+func (*heloHandler) GetPacketOfType(t PacketType) Packet {
 	switch t {
 	case PKT_HELO:
 		return &HeloPacket{}
@@ -24,12 +24,15 @@ func (*heloHandlerType) GetPacketOfType(t PacketType) Packet {
 }
 
 // Serve HeloPacket only.
-func (*heloHandlerType) ServeRequest(ctx context.Context, req Request) (rsp Packet, err error) {
+func (h *heloHandler) ServeRequest(ctx context.Context, req Request) (rsp Packet, err error) {
 	helo := req.(*HeloPacket)
-	GetLogger(ctx).Printf("license: %v\n%s",
+	logger := GetLogger(ctx)
+	logger.Printf("protocol version: %d\nlicense: %v\n%s",
+		helo.ClientVersion,
 		helo.LicenseId,
 		helo.Key,
 	)
+	h.serverSession.ctx = setProtocolVersion(ctx, helo.ClientVersion)
 	rsp = &RpcOkPacket{}
 	return
 }
