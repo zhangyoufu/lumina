@@ -7,9 +7,10 @@ import (
 )
 
 // A packet on-wire is composed of following parts:
-//  4 bytes big-endian payload length
-//  1 byte packet type
-//  variable-length payload
+//
+//	4 bytes big-endian payload length
+//	1 byte packet type
+//	variable-length payload
 type RawPacket []byte
 
 func NewRawPacket(t PacketType, payload []byte) (pkt RawPacket, err error) {

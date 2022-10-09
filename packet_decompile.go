@@ -4,7 +4,7 @@ package lumina
 
 type DecompilePacket struct {
 	packetCache
-	Opaque  []byte
+	Opaque []byte
 }
 
 func (pkt *DecompilePacket) validateFields() error {

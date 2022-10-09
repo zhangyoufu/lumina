@@ -4,7 +4,7 @@ import (
 	"context"
 )
 
-type heloHandler struct{
+type heloHandler struct {
 	serverSession *ServerSession
 }
 

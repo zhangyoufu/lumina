@@ -72,9 +72,9 @@ func (srv *Server) serveConn(conn net.Conn) {
 }
 
 type ServerSession struct {
-	conn    net.Conn
-	logger  *log.Logger
-	ctx     context.Context
+	conn   net.Conn
+	logger *log.Logger
+	ctx    context.Context
 }
 
 var errInternalServerError = errors.New("internal server error")
