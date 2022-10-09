@@ -75,6 +75,7 @@ func init() {
 	d.Addr = hexRaysAddr
 	d.RootCAs = roots
 	d.MinVersion = tls.VersionTLS13
+	d.ServerName = "vault.hex-rays.com"
 
 	defaultDialer = d
 }
