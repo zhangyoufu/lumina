@@ -16,7 +16,7 @@ type HeloPacket struct {
 }
 
 func (pkt *HeloPacket) validateFields() error {
-	if pkt.ClientVersion < 2 || pkt.ClientVersion > 3 {
+	if pkt.ClientVersion < 2 || pkt.ClientVersion > 4 {
 		return stacktrace.NewError("HeloPacket.ClientVersion=%v is unexpected",
 			pkt.ClientVersion,
 		)
