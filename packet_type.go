@@ -42,6 +42,9 @@ const (
 	PKT_GET_LUMINA_INFO_RESULT   PacketType = 0x2C
 	PKT_GET_LUMINA_STATS         PacketType = 0x2D
 	PKT_GET_LUMINA_STATS_RESULT  PacketType = 0x2E
+	GET_FUNC_HISTORIES           PacketType = 0x2F
+	GET_FUNC_HISTORIES_RESULT    PacketType = 0x30
+	HELO_RESULT                  PacketType = 0x31
 )
 
 func (t PacketType) String() string {
@@ -120,6 +123,12 @@ func (t PacketType) String() string {
 		return "PKT_GET_LUMINA_STATS"
 	case PKT_GET_LUMINA_STATS_RESULT:
 		return "PKT_GET_LUMINA_STATS_RESULT"
+	case GET_FUNC_HISTORIES:
+		return "GET_FUNC_HISTORIES"
+	case GET_FUNC_HISTORIES_RESULT:
+		return "GET_FUNC_HISTORIES_RESULT"
+	case HELO_RESULT:
+		return "HELO_RESULT"
 	default:
 		return fmt.Sprintf("0x%02X", uint8(t))
 	}
