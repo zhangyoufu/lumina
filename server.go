@@ -96,7 +96,7 @@ func (s *ServerSession) serveOne(handler Handler) error {
 		} else {
 			reqType := req.getType()
 			rspType := rsp.getType()
-			if rspType != req.getResponseType() && rspType != PKT_RPC_FAIL {
+			if !(rspType == PKT_RPC_FAIL || reqType == PKT_HELO && rspType == PKT_HELO_RESULT || rspType == req.getResponseType()) {
 				reqErr = stacktrace.NewError("%s response is not allowed for %s request", rspType, reqType)
 			}
 		}

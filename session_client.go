@@ -41,10 +41,20 @@ func (c *Client) Dial(ctx context.Context, logger *log.Logger, version int32, in
 		conn.Close()
 		return
 	}
-	if _, ok := rsp.(*RpcOkPacket); !ok {
-		err = stacktrace.NewError("hello response: %#v", rsp)
-		conn.Close()
-		return
+	if version < 5 {
+		if _, ok := rsp.(*RpcOkPacket); !ok {
+			err = stacktrace.NewError("hello response: %#v", rsp)
+			conn.Close()
+			return
+		}
+	} else {
+		if heloResult, ok := rsp.(*HeloResultPacket); !ok {
+			err = stacktrace.NewError("unexpected hello result: %#v", rsp)
+			conn.Close()
+			return
+		} else {
+			logger.Printf("hello result: %#v", heloResult.User)
+		}
 	}
 
 	// The underlying net.Conn has already called runtime.SetFinalizer.

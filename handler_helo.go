@@ -33,6 +33,22 @@ func (h *heloHandler) ServeRequest(ctx context.Context, req Request) (rsp Packet
 		helo.Key,
 	)
 	h.serverSession.ctx = setProtocolVersion(ctx, helo.ClientVersion)
-	rsp = &RpcOkPacket{}
+	if helo.ClientVersion < 5 {
+		rsp = &RpcOkPacket{}
+	} else {
+		rsp = &HeloResultPacket{
+			User: LuminaUser{
+				LicenseInfo: UserLicenseInfo{
+					Id:    "",
+					Name:  "",
+					Email: "",
+				},
+				Name:       "",
+				Karma:      0,
+				LastActive: UtcTimestamp(0),
+				Features:   0,
+			},
+		}
+	}
 	return
 }

@@ -67,6 +67,8 @@ func (*proxyHandler) GetPacketOfType(t lumina.PacketType) lumina.Packet {
 		return &lumina.DecompilePacket{}
 	case lumina.PKT_DECOMPILE_RESULT:
 		return &lumina.DecompileResultPacket{}
+	case lumina.PKT_HELO_RESULT:
+		return &lumina.HeloResultPacket{}
 	default:
 		return nil
 	}
