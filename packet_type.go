@@ -5,46 +5,46 @@ import "fmt"
 type PacketType uint8
 
 const (
-	PKT_RPC_OK                   PacketType = 0x0A
-	PKT_RPC_FAIL                 PacketType = 0x0B
-	PKT_RPC_NOTIFY               PacketType = 0x0C
-	PKT_HELO                     PacketType = 0x0D
-	PKT_PULL_MD                  PacketType = 0x0E
-	PKT_PULL_MD_RESULT           PacketType = 0x0F
-	PKT_PUSH_MD                  PacketType = 0x10
-	PKT_PUSH_MD_RESULT           PacketType = 0x11
-	PKT_GET_POP                  PacketType = 0x12
-	PKT_GET_POP_RESULT           PacketType = 0x13
-	PKT_LIST_PEERS               PacketType = 0x14
-	PKT_LIST_PEERS_RESULT        PacketType = 0x15
-	PKT_KILL_SESSIONS            PacketType = 0x16
-	PKT_KILL_SESSIONS_RESULT     PacketType = 0x17
-	PKT_DEL_HISTORY              PacketType = 0x18
-	PKT_DEL_HISTORY_RESULT       PacketType = 0x19
-	PKT_SHOW_HISTORY             PacketType = 0x1A
-	PKT_SHOW_HISTORY_RESULT      PacketType = 0x1B
-	PKT_DUMP_MD                  PacketType = 0x1C
-	PKT_DUMP_MD_RESULT           PacketType = 0x1D
-	PKT_CLEAN_DB                 PacketType = 0x1E
-	PKT_DEBUGCTL                 PacketType = 0x1F
-	PKT_DECOMPILE                PacketType = 0x20
-	PKT_DECOMPILE_RESULT         PacketType = 0x21
-	PKT_PUSH_TLM                 PacketType = 0x22
-	PKT_SHOW_TLM_SESSIONS        PacketType = 0x23
-	PKT_SHOW_TLM_SESSIONS_RESULT PacketType = 0x24
-	PKT_SHOW_PUSHES              PacketType = 0x25
-	PKT_SHOW_PUSHES_RESULT       PacketType = 0x26
-	PKT_USER_OPERATION           PacketType = 0x27
-	PKT_SHOW_USERS               PacketType = 0x28
-	PKT_SHOW_USERS_RESULT        PacketType = 0x29
-	PKT_SET_PASSWORD             PacketType = 0x2A
-	PKT_GET_LUMINA_INFO          PacketType = 0x2B
-	PKT_GET_LUMINA_INFO_RESULT   PacketType = 0x2C
-	PKT_GET_LUMINA_STATS         PacketType = 0x2D
-	PKT_GET_LUMINA_STATS_RESULT  PacketType = 0x2E
-	GET_FUNC_HISTORIES           PacketType = 0x2F
-	GET_FUNC_HISTORIES_RESULT    PacketType = 0x30
-	HELO_RESULT                  PacketType = 0x31
+	PKT_RPC_OK                    PacketType = 0x0A
+	PKT_RPC_FAIL                  PacketType = 0x0B
+	PKT_RPC_NOTIFY                PacketType = 0x0C
+	PKT_HELO                      PacketType = 0x0D
+	PKT_PULL_MD                   PacketType = 0x0E
+	PKT_PULL_MD_RESULT            PacketType = 0x0F
+	PKT_PUSH_MD                   PacketType = 0x10
+	PKT_PUSH_MD_RESULT            PacketType = 0x11
+	PKT_GET_POP                   PacketType = 0x12
+	PKT_GET_POP_RESULT            PacketType = 0x13
+	PKT_LIST_PEERS                PacketType = 0x14
+	PKT_LIST_PEERS_RESULT         PacketType = 0x15
+	PKT_KILL_SESSIONS             PacketType = 0x16
+	PKT_KILL_SESSIONS_RESULT      PacketType = 0x17
+	PKT_DEL_HISTORY               PacketType = 0x18
+	PKT_DEL_HISTORY_RESULT        PacketType = 0x19
+	PKT_SHOW_HISTORY              PacketType = 0x1A
+	PKT_SHOW_HISTORY_RESULT       PacketType = 0x1B
+	PKT_DUMP_MD                   PacketType = 0x1C
+	PKT_DUMP_MD_RESULT            PacketType = 0x1D
+	PKT_CLEAN_DB                  PacketType = 0x1E
+	PKT_DEBUGCTL                  PacketType = 0x1F
+	PKT_DECOMPILE                 PacketType = 0x20
+	PKT_DECOMPILE_RESULT          PacketType = 0x21
+	PKT_PUSH_TLM                  PacketType = 0x22
+	PKT_SHOW_TLM_SESSIONS         PacketType = 0x23
+	PKT_SHOW_TLM_SESSIONS_RESULT  PacketType = 0x24
+	PKT_SHOW_PUSHES               PacketType = 0x25
+	PKT_SHOW_PUSHES_RESULT        PacketType = 0x26
+	PKT_USER_OPERATION            PacketType = 0x27
+	PKT_SHOW_USERS                PacketType = 0x28
+	PKT_SHOW_USERS_RESULT         PacketType = 0x29
+	PKT_SET_PASSWORD              PacketType = 0x2A
+	PKT_GET_LUMINA_INFO           PacketType = 0x2B
+	PKT_GET_LUMINA_INFO_RESULT    PacketType = 0x2C
+	PKT_GET_LUMINA_STATS          PacketType = 0x2D
+	PKT_GET_LUMINA_STATS_RESULT   PacketType = 0x2E
+	PKT_GET_FUNC_HISTORIES        PacketType = 0x2F
+	PKT_GET_FUNC_HISTORIES_RESULT PacketType = 0x30
+	PKT_HELO_RESULT               PacketType = 0x31
 )
 
 func (t PacketType) String() string {
@@ -123,12 +123,12 @@ func (t PacketType) String() string {
 		return "PKT_GET_LUMINA_STATS"
 	case PKT_GET_LUMINA_STATS_RESULT:
 		return "PKT_GET_LUMINA_STATS_RESULT"
-	case GET_FUNC_HISTORIES:
-		return "GET_FUNC_HISTORIES"
-	case GET_FUNC_HISTORIES_RESULT:
-		return "GET_FUNC_HISTORIES_RESULT"
-	case HELO_RESULT:
-		return "HELO_RESULT"
+	case PKT_GET_FUNC_HISTORIES:
+		return "PKT_GET_FUNC_HISTORIES"
+	case PKT_GET_FUNC_HISTORIES_RESULT:
+		return "PKT_GET_FUNC_HISTORIES_RESULT"
+	case PKT_HELO_RESULT:
+		return "PKT_HELO_RESULT"
 	default:
 		return fmt.Sprintf("0x%02X", uint8(t))
 	}
