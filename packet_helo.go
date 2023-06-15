@@ -1,4 +1,4 @@
-//autogen HeloPacket PKT_HELO PKT_RPC_OK
+//noautogen HeloPacket PKT_HELO PKT_RPC_OK
 
 package lumina
 

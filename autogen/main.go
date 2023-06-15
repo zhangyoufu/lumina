@@ -300,7 +300,7 @@ func clearAutogenFiles() {
 }
 
 func main() {
-	clearAutogenFiles()
+	// clearAutogenFiles()
 
 	pkgs, err := packages.Load(
 		&packages.Config{
@@ -415,7 +415,7 @@ func (this *`+structName+`) writeTo(w Writer) (err error) {
 			}
 		}
 		if len(tasks) > 0 {
-			log.Fatal("autogen struct is missing")
+			log.Fatal("autogen struct is missing:\n%#v", tasks)
 		}
 		output.Close()
 	}
