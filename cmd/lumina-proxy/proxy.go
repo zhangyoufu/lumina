@@ -48,6 +48,8 @@ func (*proxyHandler) AcceptRequest(t lumina.PacketType) bool {
 		return true
 	case lumina.PKT_DECOMPILE:
 		return true
+	case lumina.PKT_GET_FUNC_HISTORIES:
+		return true
 	default:
 		return false
 	}
@@ -67,6 +69,10 @@ func (*proxyHandler) GetPacketOfType(t lumina.PacketType) lumina.Packet {
 		return &lumina.DecompilePacket{}
 	case lumina.PKT_DECOMPILE_RESULT:
 		return &lumina.DecompileResultPacket{}
+	case lumina.PKT_GET_FUNC_HISTORIES:
+		return &lumina.GetFuncHistoriesPacket{}
+	case lumina.PKT_GET_FUNC_HISTORIES_RESULT:
+		return &lumina.GetFuncHistoriesResultPacket{}
 	case lumina.PKT_HELO_RESULT:
 		return &lumina.HeloResultPacket{}
 	default:
@@ -76,10 +82,16 @@ func (*proxyHandler) GetPacketOfType(t lumina.PacketType) lumina.Packet {
 
 // Pump between client and upstream server. (half-duplex)
 func (*proxyHandler) ServeRequest(ctx context.Context, req lumina.Request) (rsp lumina.Packet, err error) {
+	if pkt, ok := req.(*lumina.GetFuncHistoriesPacket); ok {
+		lumina.GetLogger(ctx).Printf("%#v", pkt)
+	}
 	if pkt, ok := req.(*lumina.PushMdPacket); ok {
 		pkt.AnonymizeFields(ctx)
 	}
 	rsp, err = getUpstream(ctx).Request(ctx, req)
+	if pkt, ok := rsp.(*lumina.GetFuncHistoriesResultPacket); ok {
+		lumina.GetLogger(ctx).Printf("%#v", pkt)
+	}
 	// if err != nil {
 	//     lumina.GetConn(ctx).Close()
 	// }
