@@ -26,27 +26,27 @@ func (this *PullMdPacket) readFrom(r Reader) (err error) {
 		return
 	}
 	this.Keys = make([]MdKey, v2)
-	for i := uint32(0); i < v2; i++ {
-		// Field this.Keys[i]
+	for v3 := uint32(0); v3 < v2; v3++ {
+		// Field this.Keys[v3]
 		// Basic uint32
 		// Typed MdKey
-		var v3 uint32
-		if v3, err = readUint32(r); err != nil {
+		var v4 uint32
+		if v4, err = readUint32(r); err != nil {
 			return
 		}
-		this.Keys[i] = MdKey(v3)
+		this.Keys[v3] = MdKey(v4)
 	}
 	// Field this.PatternIds
 	// Slice []PatternId
-	var v4 uint32
-	if v4, err = readUint32(r); err != nil {
+	var v5 uint32
+	if v5, err = readUint32(r); err != nil {
 		return
 	}
-	this.PatternIds = make([]PatternId, v4)
-	for i := uint32(0); i < v4; i++ {
-		// Field this.PatternIds[i]
+	this.PatternIds = make([]PatternId, v5)
+	for v6 := uint32(0); v6 < v5; v6++ {
+		// Field this.PatternIds[v6]
 		// Struct PatternId
-		if err = this.PatternIds[i].readFrom(r); err != nil {
+		if err = this.PatternIds[v6].readFrom(r); err != nil {
 			return
 		}
 	}
@@ -70,11 +70,11 @@ func (this *PullMdPacket) writeTo(w Writer) (err error) {
 	if err = writeUint32(w, v2); err != nil {
 		return
 	}
-	for i := uint32(0); i < v2; i++ {
-		// Field this.Keys[i]
+	for v3 := uint32(0); v3 < v2; v3++ {
+		// Field this.Keys[v3]
 		// Basic uint32
 		// Typed MdKey
-		if err = writeUint32(w, uint32(this.Keys[i])); err != nil {
+		if err = writeUint32(w, uint32(this.Keys[v3])); err != nil {
 			return
 		}
 	}
@@ -84,14 +84,14 @@ func (this *PullMdPacket) writeTo(w Writer) (err error) {
 		err = errTooLong
 		return
 	}
-	var v4 = uint32(len(this.PatternIds))
-	if err = writeUint32(w, v4); err != nil {
+	var v5 = uint32(len(this.PatternIds))
+	if err = writeUint32(w, v5); err != nil {
 		return
 	}
-	for i := uint32(0); i < v4; i++ {
-		// Field this.PatternIds[i]
+	for v6 := uint32(0); v6 < v5; v6++ {
+		// Field this.PatternIds[v6]
 		// Struct PatternId
-		if err = this.PatternIds[i].writeTo(w); err != nil {
+		if err = this.PatternIds[v6].writeTo(w); err != nil {
 			return
 		}
 	}

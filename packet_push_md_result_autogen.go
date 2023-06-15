@@ -14,15 +14,15 @@ func (this *PushMdResultPacket) readFrom(r Reader) (err error) {
 		return
 	}
 	this.Codes = make([]OpResult, v1)
-	for i := uint32(0); i < v1; i++ {
-		// Field this.Codes[i]
+	for v2 := uint32(0); v2 < v1; v2++ {
+		// Field this.Codes[v2]
 		// Basic int32
 		// Typed OpResult
-		var v2 int32
-		if v2, err = readInt32(r); err != nil {
+		var v3 int32
+		if v3, err = readInt32(r); err != nil {
 			return
 		}
-		this.Codes[i] = OpResult(v2)
+		this.Codes[v2] = OpResult(v3)
 	}
 	return
 }
@@ -38,11 +38,11 @@ func (this *PushMdResultPacket) writeTo(w Writer) (err error) {
 	if err = writeUint32(w, v1); err != nil {
 		return
 	}
-	for i := uint32(0); i < v1; i++ {
-		// Field this.Codes[i]
+	for v2 := uint32(0); v2 < v1; v2++ {
+		// Field this.Codes[v2]
 		// Basic int32
 		// Typed OpResult
-		if err = writeInt32(w, int32(this.Codes[i])); err != nil {
+		if err = writeInt32(w, int32(this.Codes[v2])); err != nil {
 			return
 		}
 	}

@@ -236,8 +236,9 @@ func (ctx *Context) Process(varName string, varType types.Type) {
 			ctx.read("if err = readBytes(r, " + varName + "[:]); err != nil {\n\treturn\n}")
 			ctx.write("if err = writeBytes(w, " + varName + "[:]); err != nil {\n\treturn\n}")
 		} else {
-			ctx.both("for i := uint32(0); i < " + length + "; i++ {")
-			ctx.Process(varName+"[i]", elemType)
+			loopvar := ctx.unique()
+			ctx.both("for " + loopvar + " := uint32(0); " + loopvar + " < " + length + "; " + loopvar + "++ {")
+			ctx.Process(varName+"["+loopvar+"]", elemType)
 			ctx.both("}")
 		}
 	case *types.Slice:
@@ -259,8 +260,9 @@ func (ctx *Context) Process(varName string, varType types.Type) {
 			ctx.read("if err = readBytes(r, " + varName + "); err != nil {\n\treturn\n}")
 			ctx.write("if err = writeBytes(w, " + varName + "); err != nil {\n\treturn\n}")
 		} else {
-			ctx.both("for i := uint32(0); i < " + tmp + "; i++ {")
-			ctx.Process(varName+"[i]", elemType)
+			loopvar := ctx.unique()
+			ctx.both("for " + loopvar + " := uint32(0); " + loopvar + " < " + tmp + "; " + loopvar + "++ {")
+			ctx.Process(varName+"["+loopvar+"]", elemType)
 			ctx.both("}")
 		}
 	default:

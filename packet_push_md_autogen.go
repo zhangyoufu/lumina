@@ -69,24 +69,24 @@ func (this *PushMdPacket) readFrom(r Reader) (err error) {
 		return
 	}
 	this.Contents = make([]FuncInfoAndPattern, v2)
-	for i := uint32(0); i < v2; i++ {
-		// Field this.Contents[i]
+	for v3 := uint32(0); v3 < v2; v3++ {
+		// Field this.Contents[v3]
 		// Struct FuncInfoAndPattern
-		if err = this.Contents[i].readFrom(r); err != nil {
+		if err = this.Contents[v3].readFrom(r); err != nil {
 			return
 		}
 	}
 	// Field this.EAs
 	// Slice []uint64
-	var v3 uint32
-	if v3, err = readUint32(r); err != nil {
+	var v4 uint32
+	if v4, err = readUint32(r); err != nil {
 		return
 	}
-	this.EAs = make([]uint64, v3)
-	for i := uint32(0); i < v3; i++ {
-		// Field this.EAs[i]
+	this.EAs = make([]uint64, v4)
+	for v5 := uint32(0); v5 < v4; v5++ {
+		// Field this.EAs[v5]
 		// Basic uint64
-		if this.EAs[i], err = readUint64(r); err != nil {
+		if this.EAs[v5], err = readUint64(r); err != nil {
 			return
 		}
 	}
@@ -125,10 +125,10 @@ func (this *PushMdPacket) writeTo(w Writer) (err error) {
 	if err = writeUint32(w, v2); err != nil {
 		return
 	}
-	for i := uint32(0); i < v2; i++ {
-		// Field this.Contents[i]
+	for v3 := uint32(0); v3 < v2; v3++ {
+		// Field this.Contents[v3]
 		// Struct FuncInfoAndPattern
-		if err = this.Contents[i].writeTo(w); err != nil {
+		if err = this.Contents[v3].writeTo(w); err != nil {
 			return
 		}
 	}
@@ -138,14 +138,14 @@ func (this *PushMdPacket) writeTo(w Writer) (err error) {
 		err = errTooLong
 		return
 	}
-	var v3 = uint32(len(this.EAs))
-	if err = writeUint32(w, v3); err != nil {
+	var v4 = uint32(len(this.EAs))
+	if err = writeUint32(w, v4); err != nil {
 		return
 	}
-	for i := uint32(0); i < v3; i++ {
-		// Field this.EAs[i]
+	for v5 := uint32(0); v5 < v4; v5++ {
+		// Field this.EAs[v5]
 		// Basic uint64
-		if err = writeUint64(w, this.EAs[i]); err != nil {
+		if err = writeUint64(w, this.EAs[v5]); err != nil {
 			return
 		}
 	}
